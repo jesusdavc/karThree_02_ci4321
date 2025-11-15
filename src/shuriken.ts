@@ -29,6 +29,8 @@ export class Shuriken {
   private launched: boolean = false;
   // Number of times the shuriken has bounced against walls
   private bounces: number = 0;
+  // Index to identify this shuriken in parent's launched projectiles list
+  private index: number = -1;
   // Optional back-reference to the kart that launched it
   public parent: Kart | undefined = undefined;
 
@@ -188,6 +190,19 @@ export class Shuriken {
   }
 
   /**
+   * setIndex / getIndex - set and get the index used to identify this shuriken
+   * in the parent's launched projectiles list.
+   */
+
+  public setIndex(index: number): void {
+    this.index = index;
+  }
+
+  public getIndex(): number {
+    return this.index;
+  }
+
+  /**
    * isColliding - collision callback used by the collision system.
    * - reacts to TrafficCone collisions by removing the shuriken from its parent list
    *   and scheduling this instance for observer removal.
@@ -209,6 +224,7 @@ export class Shuriken {
           this.mesh.parent.remove(this.mesh);
         } else {
           this.deleteScene();
+          this.parent?.removeProyectilFromMap(this.index);
         }
         // schedule this shuriken instance for removal from collision observer arrays
         collisionObserver.addObjectToRemove(this);

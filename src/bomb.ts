@@ -27,6 +27,7 @@ export class Bomb {
   private timer: number = 3; // seconds until explosion
   private exploded: boolean = false;
   private launched: boolean = false;
+  private index: number = -1;
 
   constructor(name?: string) {
     this.name = name;
@@ -190,6 +191,17 @@ export class Bomb {
       scene.remove(this.mesh);
       collisionObserver.addObjectToRemove(this);
     }, 300);
+  }
+  
+  /**
+   * setIndex - assign an index to identify this bomb in parent's launched projectiles list.
+   */
+  public setIndex(index: number): void {
+    this.index = index;
+  }
+
+  public getIndex(): number {
+    return this.index;
   }
 
   /**

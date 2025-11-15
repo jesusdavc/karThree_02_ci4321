@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { scene } from './scene';
-import {solidWithWire, reflectDirection } from './utils/utils';
+import {solidWithWire, reflectDirection, disposeMesh } from './utils/utils';
 import { Shuriken } from './shuriken';
 import type {Proyectils, StaticObjects } from './models/colisionClass';
 import { collisionObserver } from './utils/colliding';
@@ -52,8 +52,8 @@ export class Kart {
   private isActivatePowerUps: boolean = false;
   private powerUpsList: THREE.Group = new THREE.Group(); // visual holder for active power-ups
   private proyectilesList: Proyectils[] = []; // stored projectile instances (not yet launched)
-  private proyectilLaunched: Proyectils[] = []  // projectiles that have been launched
-
+  private proyectilLaunched: Map<number, Proyectils> = new Map();  // projectiles that have been launched
+  private countProyectilesLaunched: number = 0;
   /**
    * Constructor - builds the kart's visual components (chassis, extras, wheels),
    * adds the kart to the global scene and registers it with the collision observer.
@@ -314,6 +314,10 @@ export class Kart {
           // Store instance and add its mesh to the power-up group
           this.proyectilesList.push(shuriken1_case0);
           this.powerUpsList.add(shuriken1_case0.getBody());
+
+          // Set index for launched projectiles tracking
+          shuriken1_case0.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
           break;
         case 1:
           // Activate two shurikens
@@ -329,6 +333,12 @@ export class Kart {
           // Store instances and add meshes
           this.proyectilesList.push(shuriken1_case1, shuriken2_case1);
           this.powerUpsList.add(shuriken1_case1.getBody(), shuriken2_case1.getBody());
+
+          // Set indices for launched projectiles tracking
+          shuriken1_case1.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
+          shuriken2_case1.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
 
           break;
         case 2:
@@ -348,6 +358,15 @@ export class Kart {
           // Store instances and add meshes
           this.proyectilesList.push(shuriken1_case2, shuriken2_case2, shuriken3_case2);
           this.powerUpsList.add(shuriken1_case2.getBody(), shuriken2_case2.getBody(), shuriken3_case2.getBody());
+
+          // Set indices for launched projectiles tracking
+          shuriken1_case2.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
+          shuriken2_case2.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
+          shuriken3_case2.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
+
           break;
         case 3:
           // Activate bomb
@@ -356,6 +375,10 @@ export class Kart {
           bomb.setPosition(0,0.5,-4);
           this.proyectilesList.push(bomb);
           this.powerUpsList.add(bomb.getBody());
+
+          // Set index for launched projectiles tracking
+          bomb.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
           break;
         case 4:
           // Activate coffee (speed consumable)
@@ -419,7 +442,9 @@ export class Kart {
           const index = this.proyectilesList.findIndex((proy) => proy.getBody() === powerUpMesh);
 
           const proyectil = this.proyectilesList[index];
+
           proyectil.addScene();
+
           if(proyectil instanceof Shuriken){
             proyectil.setVelocity(this.kart);
           }
@@ -439,7 +464,10 @@ export class Kart {
           }
 
           // Move instance from proyectilesList to proyectilLaunched
-          this.proyectilLaunched.push(this.proyectilesList.pop()!);
+          //this.proyectilLaunched.push(this.proyectilesList.pop()!);
+          this.proyectilLaunched.set(proyectil.getIndex(), proyectil);
+          //this.proyectilesList.splice(index, 1);
+          console.log("Proyectil lanzado");
 
           break;
         case 4:
@@ -471,6 +499,10 @@ export class Kart {
     console.log("Proyectil removido de la lista");
   }
 
+  public removeProyectilFromMap(index: number): void {
+    this.proyectilLaunched.delete(index);
+    console.log("Proyectil removido de la lista");
+  }
   /**
    * activateSpeedBoost - enable a temporary speed boost.
    * @param now: current timestamp in ms (performance.now()).
@@ -498,10 +530,15 @@ export class Kart {
    * - Also reset activation flags.
    */
   public clearPowerUps(): void {
-    this.powerUpsList.children.forEach((powerUp) => {
-      this.powerUpsList.remove(powerUp);
-    });
-    this.proyectilesList = [];
+    while (this.powerUpsList.children.length) {
+      const child = this.powerUpsList.children.pop()!;      
+      this.powerUpsList.remove(child);
+      disposeMesh(child);
+
+      const proyectil = this.proyectilesList.pop()!;
+      collisionObserver.addObjectToRemove(proyectil)
+    }
+    collisionObserver.removeSelectedObjects();
     this.isActivatePowerUps = false;
     this.powerUps = -1;
     console.log("Power ups limpiados");
@@ -575,14 +612,14 @@ export class Kart {
     this.powerUpsList.position.copy(this.kart.position);
     
     // Advance launched projectiles: call update for bombs (physics) and simple movement for others
-    for (let i = 0; i < this.proyectilLaunched.length; i++) {
-      const proyectil = this.proyectilLaunched[i];
+    for (let [, proyectil] of this.proyectilLaunched) {
+      //console.log(proyectil);
       if (proyectil instanceof Bomb) {
             proyectil.update(deltaTime); // gravity, explosion, etc.
       } else {
         proyectil.moveForward(0.9);
         proyectil.rotateY(0.1);
-      }
+      }      
     };
     
   }

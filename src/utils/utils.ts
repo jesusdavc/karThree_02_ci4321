@@ -297,3 +297,17 @@ export function resolvePenetrationObstacles(
   const parent = reflect.getBody().parent!;
   reflect.getBody().position.copy(parent.worldToLocal(worldPos.clone()));
 }
+
+/**
+ * disposeMesh - utility to dispose geometry and material resources of a Mesh.
+ * Call this when removing a mesh from the scene to avoid memory leaks.
+ * Parameters:
+ *  - obj: Object3D to dispose (cast to Mesh internally).
+ */
+
+export function disposeMesh(obj: THREE.Object3D) {
+  const mesh = obj as THREE.Mesh;
+  if (mesh.geometry) mesh.geometry.dispose();
+  if (Array.isArray(mesh.material)) mesh.material.forEach(m => (m as THREE.Material).dispose());
+  else if (mesh.material) (mesh.material as THREE.Material).dispose();
+}
