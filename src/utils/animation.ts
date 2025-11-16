@@ -1,11 +1,12 @@
 import { updateCameraRig, updateControls } from '../controls';
-import { scene, camera, renderer, controls } from '../scene';
+import { scene, camera, renderer, controls} from '../scene';
 import { collisionObserver } from './colliding';    
 import { kart, listPowerUps, decorators } from './initializers';
 
 export function animate(now: number): void {
   scene.updateMatrixWorld(true);
   
+
   kart.updateBoost(now)
   updateCameraRig()
   updateControls();
@@ -18,5 +19,6 @@ export function animate(now: number): void {
   }
   collisionObserver.checkCollision();
   requestAnimationFrame(animate);
+  
   renderer.render(scene, camera);
 }

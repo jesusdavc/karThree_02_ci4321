@@ -27,15 +27,22 @@ import { Shuriken } from "../shuriken";
  */
 export function solidWithWire(
   geometry: THREE.BufferGeometry,
-  color: number,
+  color?: number,
   transparent = true,
   wireColor = 0x111111,
+  texture?: THREE.Texture,
+  normalTexture?: THREE.Texture,
+  roughnessTexture?: THREE.Texture,
+  displacementTexture?: THREE.Texture,
+  metalnessTexture?: THREE.Texture
 ): THREE.Group {
   const group = new THREE.Group();
 
   const solid = new THREE.Mesh(
     geometry,
-    new THREE.MeshStandardMaterial({ color, metalness: 0.1, roughness: 0.6 })
+    new THREE.MeshStandardMaterial({ color, 
+      map: texture, normalMap: normalTexture, roughnessMap: roughnessTexture, roughness: 20.0, 
+      displacementMap: displacementTexture, metalnessMap: metalnessTexture, metalness: 1 })
   );
 
   if (transparent) {
