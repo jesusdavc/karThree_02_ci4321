@@ -41,7 +41,7 @@ export function solidWithWire(
   const solid = new THREE.Mesh(
     geometry,
     new THREE.MeshStandardMaterial({ color, 
-      map: texture, normalMap: normalTexture, roughnessMap: roughnessTexture, roughness: 20.0, 
+      map: texture, normalMap: normalTexture, roughnessMap: roughnessTexture, roughness: 1.0, 
       displacementMap: displacementTexture, metalnessMap: metalnessTexture, metalness: 1 })
   );
 
