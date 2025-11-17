@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import type { CollisionClassName, ReflectObjects, StaticObjects } from "../models/colisionClass";
 import { Shuriken } from "../shuriken";
+import type { roughness } from "three/tsl";
 
 /**
  * Utility functions used across the project.
@@ -30,21 +31,23 @@ export function solidWithWire(
   color?: number,
   transparent = true,
   wireColor = 0x111111,
+  aoMap?: THREE.Texture,
   texture?: THREE.Texture,
   normalTexture?: THREE.Texture,
   roughnessTexture?: THREE.Texture,
   displacementTexture?: THREE.Texture,
-  metalnessTexture?: THREE.Texture
+  metalnessTexture?: THREE.Texture,
+  roughness = 0.3, 
+  metalness = 0.8
 ): THREE.Group {
   const group = new THREE.Group();
-
   const solid = new THREE.Mesh(
     geometry,
     new THREE.MeshStandardMaterial({ color, 
-      map: texture, normalMap: normalTexture, roughnessMap: roughnessTexture, roughness: 1.0, 
-      displacementMap: displacementTexture, metalnessMap: metalnessTexture, metalness: 1 })
+      aoMap: aoMap, map: texture, normalMap: normalTexture, roughnessMap: roughnessTexture, roughness: roughness, 
+      displacementMap: displacementTexture, metalnessMap: metalnessTexture, metalness: metalness,  })
   );
-
+  //solid.castShadow = true;
   if (transparent) {
     // wireframe overlay (same geometry, different material)
     const wire = new THREE.Mesh(

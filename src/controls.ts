@@ -145,11 +145,12 @@ export function updateControls(): void {
   kart.getWheelsBackAxis().rotation.y = kart.steeringAngle;
 
   // Update camera position/orientation based on current cameraMode and rMode
+  /*
   changeCameraPosition(cameraMode, rMode);
   if (cameraMode === 0) {
     // In third-person camera mode make camera look at the kart position
     camera.lookAt(kart.getBody().position);
-  }
+  }*/
 }
 
 /**

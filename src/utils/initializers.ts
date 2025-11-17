@@ -1,9 +1,11 @@
+import * as THREE from "three";
 import { PowerUp } from "../powerUps";
 import { Kart } from "../kart";
 import { TrafficCone } from "../trafficCone";
 import { Walls } from "../walls";
 import { USB } from "../usb";
-import { RaceTrack } from "../RaceTrackClass";
+import { Ground } from "../Ground";
+import { RaceTrack } from "../RaceTrack";
 
 
 /*
@@ -242,7 +244,12 @@ export function createConeSquare(
   }
 }
 
-/** createRaceTrack - convenience helper to create a RaceTrack with default size. */
-export function createRaceTrack(){
-  const track = new RaceTrack(150,150);
+/** createGround - convenience helper to create a Ground with default size. */
+export function createGround(){
+  const ground = new Ground(150,150);
+}
+
+// Función para generar 4 planos unidos formando un cuadrado "sin relleno"
+export function createHollowSquare(size?: number,thickness?: number){
+  const group = new RaceTrack(size, thickness);
 }

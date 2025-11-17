@@ -66,25 +66,32 @@ export class Kart {
     // Build chassis geometry and material, then wrap with helper that provides a visible wire
     const body = new THREE.BoxGeometry(length, height, width);
     body.translate(0, height / 3, 0);
-    const material_color = 0xF7EA48;//0xFFE900;
+    const material_color = 0xF7EA48;
     const material_color_dark = 0x1D252D;
     const textureLoader = new THREE.TextureLoader(); 
     
     // Textures for the kart 
-    const yellowTexture = textureLoader.load("src\\textures\\Kar\\metal_0065_color_1k.jpg")
-    //const yellowTextureNormal = textureLoader.load("src\\textures\\Kar\\metal_0065_normal_opengl_1k.jpg")
+    const yellowTexture = textureLoader.load("src\\textures\\Kar\\metal_0081_ao_1k.jpg")
+    yellowTexture.wrapS = THREE.RepeatWrapping;
+    yellowTexture.wrapT = THREE.RepeatWrapping;
+    yellowTexture.repeat.set(length+1, height+1)
+
+    const yellowTextureNormal = textureLoader.load("src\\textures\\Kar\\metal_0081_normal_directx_1k.png")
+    yellowTextureNormal.wrapS = THREE.RepeatWrapping;
+    yellowTextureNormal.wrapT = THREE.RepeatWrapping;
+    yellowTextureNormal.repeat.set(length+1, height+1)
 
     const blackTexture = textureLoader.load("src\\textures\\Kar\\Metal033_1K-JPG_Color.jpg")
     const blackTextureNormal = textureLoader.load("src\\textures\\Kar\\Metal033_1K-JPG_NormalGL.jpg")
     
-    this.kartChassis = solidWithWire(body, material_color, false, undefined, yellowTexture);
+    this.kartChassis = solidWithWire(body, material_color, false, undefined,undefined, yellowTexture, yellowTextureNormal);
     this.kartChassis.name = "kartChassis";
 
     // Set material karTChassis
     
     // Decorative elements (hood, trims, lights, windows, exhaust) added to the chassis
     let capo = new THREE.CylinderGeometry(6.3,9,4.3,4); // decorative hood
-    let material_capo = new THREE.MeshStandardMaterial({ color:material_color, map: yellowTexture, roughness: 1.0, metalness: 1.0});
+    let material_capo = new THREE.MeshStandardMaterial({ color:material_color, map: yellowTexture, normalMap: yellowTextureNormal, roughness: 0.3, metalness: 0.8});
     let mesh_capo = new THREE.Mesh(capo, material_capo);
     mesh_capo.rotation.y = Math.PI / 4;
     mesh_capo.scale.set(0.15,0.15,0.15);
@@ -92,7 +99,7 @@ export class Kart {
     this.kartChassis.add(mesh_capo);
 
     let tope = new THREE.BoxGeometry(0.6,0.2,1);
-    let material_tope = new THREE.MeshStandardMaterial({color:material_color, map: yellowTexture, roughness: 1.0, metalness: 1.0});
+    let material_tope = new THREE.MeshStandardMaterial({color:material_color, map: yellowTexture, normalMap: yellowTextureNormal, roughness: 0.3, metalness: 0.8});
     let mesh_tope = new THREE.Mesh(tope, material_tope);
     mesh_tope.position.set(0,0.8,0.8);
     mesh_tope.rotateX(Math.PI/16);
@@ -186,7 +193,7 @@ export class Kart {
 
     // Assemble kart group and add helper axes for debugging
     this.kart.add(this.kartChassis);
-    this.kart.position.set(0, 0.6,-3);
+    this.kart.position.set(0, 0.7,-3);
     //this.kart.add(new THREE.AxesHelper(3));
 
     // Wheels and axes setup

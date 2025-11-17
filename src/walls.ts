@@ -40,8 +40,40 @@ export class Walls {
 
         // Build a thin box geometry to represent the wall
         const wallGeometry1 = new THREE.BoxGeometry(this.wallLength, this.wallHeight, this.wallThickness);
-        const wallColor = 0x506468; // neutral color for walls (was Spanish comment)
-        this.wall = solidWithWire(wallGeometry1, wallColor, false);
+        const wallColor = 0x94A596; // neutral color for walls (was Spanish comment)
+        
+        // Load wall textures
+        const loader = new THREE.TextureLoader();
+
+        const aoTexture = loader.load('src\\textures\\StacticObjects\\Walls\\bricks_0007_ao_1k.jpg');
+        aoTexture.wrapS = THREE.RepeatWrapping;
+        aoTexture.wrapT = THREE.RepeatWrapping;
+        aoTexture.repeat.set(this.wallLength/2, this.wallHeight/2);
+
+        const texture = loader.load('src\\textures\\StacticObjects\\Walls\\bricks_0007_color_1k.jpg');
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(this.wallLength/2, this.wallHeight/2);
+
+        const normalTexture = loader.load('src\\textures\\StacticObjects\\Walls\\bricks_0007_normal_directx_1k.png');
+        normalTexture.wrapS = THREE.RepeatWrapping;
+        normalTexture.wrapT = THREE.RepeatWrapping;
+        normalTexture.repeat.set(this.wallLength/2, this.wallHeight/2);
+
+        const roughnessTexture = loader.load('src\\textures\\StacticObjects\\Walls\\bricks_0007_roughness_1k.jpg');
+        roughnessTexture.wrapS = THREE.RepeatWrapping;
+        roughnessTexture.wrapT = THREE.RepeatWrapping;
+        roughnessTexture.repeat.set(this.wallLength/2, this.wallHeight/2);
+
+        const metalnessTexture = loader.load('src\\textures\\StacticObjects\\Walls\\bricks_0007_metalness_1k.jpg');
+        metalnessTexture.wrapS = THREE.RepeatWrapping;
+        metalnessTexture.wrapT = THREE.RepeatWrapping;
+        metalnessTexture.repeat.set(this.wallLength/2, this.wallHeight/2);
+
+        this.wall = solidWithWire(wallGeometry1, wallColor, false,undefined, 
+            aoTexture, texture, normalTexture, roughnessTexture, undefined, metalnessTexture, 
+            0.1, 0.1);
+        
         // Add a small axes helper to visualize orientation during debugging
         //this.wall.add(new THREE.AxesHelper(3));
 

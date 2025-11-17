@@ -6,9 +6,9 @@ import type { CollisionClassName } from './models/colisionClass';
 import { Bomb } from './bomb';
 
 /**
- * RaceTrack
+ * Ground
  *
- * Encapsulates a ground plane used as the racing track.
+ * Encapsulates a ground plane.
  * - Adds itself to the global scene.
  * - Registers with the global collision observer so collisions with projectiles
  *   or other objects can be detected.
@@ -17,7 +17,7 @@ import { Bomb } from './bomb';
  *  - width / length: size of the track plane.
  *  - color: base color of the track surface.
  */
-export class RaceTrack {
+export class Ground {
   private mesh: THREE.Mesh;
 
   /**
@@ -28,10 +28,27 @@ export class RaceTrack {
    */
   constructor(width: number = 100, length: number = 100, color: number = 0x6aa84f) {
     const geometry = new THREE.PlaneGeometry(width, length);
+
+    const loader = new THREE.TextureLoader()
+    const aoTexture = loader.load('src\\textures\\StacticObjects\\Ground\\aerial_rocks_01_ao_1k.jpg');
+    aoTexture.wrapS = THREE.RepeatWrapping;
+    aoTexture.wrapT = THREE.RepeatWrapping;
+    aoTexture.repeat.set(width/4, length/4);
+
+    const texture = loader.load('src\\textures\\StacticObjects\\Ground\\aerial_rocks_01_diff_1k.jpg');
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(width/4, length/4);
+
+    const textureNormal = loader.load('src\\textures\\StacticObjects\\Ground\\aerial_rocks_01_nor_gl_1k.jpg');
+    textureNormal.wrapS = THREE.RepeatWrapping;
+    textureNormal.wrapT = THREE.RepeatWrapping;
+    textureNormal.repeat.set(width/4, length/4);
+
     const material = new THREE.MeshStandardMaterial({
-      color,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide, map: texture, normalMap: textureNormal, aoMap: aoTexture
     });
+    
 
     this.mesh = new THREE.Mesh(geometry, material);
     // Rotate the plane to be horizontal (lay flat on the XZ plane)
