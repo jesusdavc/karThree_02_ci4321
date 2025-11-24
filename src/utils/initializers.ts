@@ -4,9 +4,9 @@ import { Kart } from "../kart";
 import { TrafficCone } from "../trafficCone";
 import { Walls } from "../walls";
 import { USB } from "../usb";
-import { Ground } from "../Ground";
-import { RaceTrack } from "../RaceTrack";
-
+import { Ground } from "../ground";
+import { RaceTrack } from "../raceTrack";
+import { SkyBox } from "../skyBox";
 
 /*
  * Initialization module - factory helpers to create scene entities.
@@ -237,7 +237,7 @@ export function createConeSquare(
   }
 
   for (const pos of positions) {
-    const tc = new TrafficCone();
+    const tc = new TrafficCone(true);
     tc.setX(pos.x);
     tc.setZ(pos.z);
     trafficCones.push(tc);
@@ -252,4 +252,9 @@ export function createGround(){
 // Función para generar 4 planos unidos formando un cuadrado "sin relleno"
 export function createHollowSquare(size?: number,thickness?: number){
   const group = new RaceTrack(size, thickness);
+}
+
+export function createSkyBox(): void {
+  const skybox = new SkyBox();
+  decorators.push(skybox);
 }
