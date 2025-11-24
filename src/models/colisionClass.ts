@@ -5,8 +5,8 @@ import { Walls } from "../walls";
 import { Kart } from "../kart";
 import { Bomb } from "../bomb";
 import { Coffee } from "../coffee";
-import type { Ground } from "../Ground";
-import type { RaceTrack } from "../RaceTrack";
+import type { Ground } from "../ground";
+import type { RaceTrack } from "../raceTrack";
 
 export type CollisionClassName = Kart | PowerUp | Shuriken | TrafficCone | Walls | Bomb | Ground| RaceTrack;
 export type Proyectils = Shuriken | Bomb;
