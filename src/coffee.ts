@@ -13,18 +13,23 @@ export class Coffee {
     private coffeeMesh: THREE.Group = new THREE.Group();
 
     constructor() {
+        // Texture loader 
+        const loader = new THREE.TextureLoader();
+        const cupTexture = loader.load('src\\textures\\PowerUps\\Coffee\\Marble021_1K-JPG_Color.jpg');
+        const cupNormalTexture = loader.load('src\\textures\\PowerUps\\Coffee\\Marble021_1K-JPG_NormalDX.jpg');
+
         // Build the cup as a cylinder
         // CylinderGeometry(radiusTop, radiusBottom, height, radialSegments)
         const cupGeometry = new THREE.CylinderGeometry(1, 1, 1.5, 32);
         const cupColor = 0xffffff;
-        const cup = solidWithWire(cupGeometry, cupColor, false);
+        const cup = solidWithWire(cupGeometry, cupColor, false, undefined, undefined, cupTexture, cupNormalTexture);
         // Raise cup so its bottom sits at y = 0
         cup.position.y = 1.5 / 2;
 
         // Build the handle using a partial torus (half torus)
         // TorusGeometry(radius, tube, radialSegments, tubularSegments, arc)
         const handleGeometry = new THREE.TorusGeometry(0.4, 0.1, 16, 100, Math.PI);
-        const handle = solidWithWire(handleGeometry, cupColor, false);
+        const handle = solidWithWire(handleGeometry, cupColor, false, undefined, undefined, cupTexture, cupNormalTexture);
         // Position the handle to the side and rotate so it attaches to the cup
         handle.position.set(1, 1.5 / 2, 0);
         handle.rotation.z = -Math.PI / 2;

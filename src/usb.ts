@@ -28,88 +28,93 @@ export class USB {
      *  3. Add all parts to the root group and then add the group to the scene.
      */
     constructor() {
+        // Texture
+        const loader = new THREE.TextureLoader();
+        const aoTexture = loader.load('src\\textures\\StacticObjects\\Usb\\others_0013_ao_1k.jpg');
+        const texture = loader.load('src\\textures\\StacticObjects\\Usb\\others_0013_color_1k.jpg');
+        const textureNormal = loader.load('src\\textures\\StacticObjects\\Usb\\others_0013_normal_directx_1k.png');
         // Base color for the letters
         const materialColor = 0x0000ff;
 
         // --- Letter U construction (composed from two vertical bars and a base) ---
         const verticalBarGeo = new THREE.BoxGeometry(2, 10, 1);
-        const rightU = solidWithWire(verticalBarGeo, materialColor, false);
-        rightU.position.set(-8, 15, 0);
+        const rightU = solidWithWire(verticalBarGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
+        rightU.position.set(-8, 15, 0.01);
         this.usbMesh.add(rightU);
 
-        const leftU = solidWithWire(verticalBarGeo, materialColor, false);
-        leftU.position.set(-14, 15, 0);
+        const leftU = solidWithWire(verticalBarGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
+        leftU.position.set(-14, 15, 0.01);
         this.usbMesh.add(leftU);
 
         const baseUGeo = new THREE.BoxGeometry(6, 2, 1);
-        const baseU = solidWithWire(baseUGeo, materialColor, false);
+        const baseU = solidWithWire(baseUGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         baseU.position.set(-11, 10, 0);
         this.usbMesh.add(baseU);
 
         // --- Letter S construction (top, middle, bottom bars + side bars) ---
         const longBarGeo = new THREE.BoxGeometry(9, 2, 1);
-        const topS = solidWithWire(longBarGeo, materialColor, false);
-        topS.position.set(0, 19, 0);
+        const topS = solidWithWire(longBarGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
+        topS.position.set(0, 19, 0.01);
         this.usbMesh.add(topS);
 
-        const middleS = solidWithWire(longBarGeo, materialColor, false);
+        const middleS = solidWithWire(longBarGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         middleS.position.set(0, 14.5, 0);
         this.usbMesh.add(middleS);
 
-        const bottomS = solidWithWire(longBarGeo, materialColor, false);
+        const bottomS = solidWithWire(longBarGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         bottomS.position.set(0, 10, 0);
         this.usbMesh.add(bottomS);
 
         const smallBarGeo = new THREE.BoxGeometry(2, 5, 1);
-        const leftS = solidWithWire(smallBarGeo, materialColor, false);
+        const leftS = solidWithWire(smallBarGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         leftS.position.set(-4.5, 16.75, 0);
         this.usbMesh.add(leftS);
 
-        const rightS = solidWithWire(smallBarGeo, materialColor, false);
-        rightS.position.set(4.5, 12.25, 0);
+        const rightS = solidWithWire(smallBarGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
+        rightS.position.set(4.5, 12.25, 0.01);
         this.usbMesh.add(rightS);
 
         // --- Letter B construction (vertical bar + three horizontal bars + inner small pieces) ---
         const verticalBGeo = new THREE.BoxGeometry(2, 10, 1);
-        const leftB = solidWithWire(verticalBGeo, materialColor, false);
-        leftB.position.set(8, 14.5, 0);
+        const leftB = solidWithWire(verticalBGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
+        leftB.position.set(8, 14.5, 0.01);
         this.usbMesh.add(leftB);
 
         const horizontalBGeo = new THREE.BoxGeometry(6, 2, 1);
-        const topB = solidWithWire(horizontalBGeo, materialColor, false);
+        const topB = solidWithWire(horizontalBGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         topB.position.set(11, 19, 0);
         this.usbMesh.add(topB);
 
-        const middleB = solidWithWire(horizontalBGeo, materialColor, false);
+        const middleB = solidWithWire(horizontalBGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         middleB.position.set(11, 14.5, 0);
         this.usbMesh.add(middleB);
 
-        const bottomB = solidWithWire(horizontalBGeo, materialColor, false);
+        const bottomB = solidWithWire(horizontalBGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         bottomB.position.set(11, 10, 0);
         this.usbMesh.add(bottomB);
 
         const innerSmallGeo = new THREE.BoxGeometry(1, 2.8, 1);
-        const innerRightBTop = solidWithWire(innerSmallGeo, materialColor, false);
+        const innerRightBTop = solidWithWire(innerSmallGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         innerRightBTop.position.set(14, 18, 0);
         this.usbMesh.add(innerRightBTop);
 
-        const innerRightBTopMiddle = solidWithWire(innerSmallGeo, materialColor, false);
+        const innerRightBTopMiddle = solidWithWire(innerSmallGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         innerRightBTopMiddle.position.set(15, 17, 0);
         this.usbMesh.add(innerRightBTopMiddle);
 
-        const innerRightBTopBottom = solidWithWire(innerSmallGeo, materialColor, false);
+        const innerRightBTopBottom = solidWithWire(innerSmallGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         innerRightBTopBottom.position.set(14, 16, 0);
         this.usbMesh.add(innerRightBTopBottom);
 
-        const innerLeftBTop = solidWithWire(innerSmallGeo, materialColor, false);
+        const innerLeftBTop = solidWithWire(innerSmallGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         innerLeftBTop.position.set(14, 12.25, 0);
         this.usbMesh.add(innerLeftBTop);
 
-        const innerLeftBBottomMiddle = solidWithWire(innerSmallGeo, materialColor, false);
+        const innerLeftBBottomMiddle = solidWithWire(innerSmallGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         innerLeftBBottomMiddle.position.set(15, 11.5, 0);
         this.usbMesh.add(innerLeftBBottomMiddle);
 
-        const innerLeftBBottom = solidWithWire(innerSmallGeo, materialColor, false);
+        const innerLeftBBottom = solidWithWire(innerSmallGeo, undefined, false, undefined, aoTexture, texture, textureNormal);
         innerLeftBBottom.position.set(14, 11, 0);
         this.usbMesh.add(innerLeftBBottom);
 
