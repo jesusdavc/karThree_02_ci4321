@@ -7,7 +7,7 @@ let hudCamera: THREE.OrthographicCamera | null = null;
 let atlasTexture: THREE.Texture | null = null;
 const ATLAS_TILE = 64;
 const ATLAS_COLS = 14;
-const ATLAS_ROWS = 2;
+const ATLAS_ROWS = 1;
 
 let powerUpMesh: THREE.Mesh | null = null;
 let puCountMesh: THREE.Mesh | null = null;
@@ -136,7 +136,7 @@ export async function initHUD() {
 
   try {
     // Cargar el atlas PNG - ajusta la ruta según tu proyecto
-    atlasTexture = await loadAtlasTexture('hud_atlas.png');
+    atlasTexture = await loadAtlasTexture('../src/hud_atlas.png');
     console.log('Atlas texture loaded successfully');
   } catch (e) {
     console.error('Failed to load atlas texture', e);
