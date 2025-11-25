@@ -32,7 +32,7 @@ function loadAtlasTexture(path: string): Promise<THREE.Texture> {
       (texture) => {
         texture.magFilter = THREE.NearestFilter;
         texture.minFilter = THREE.NearestFilter;
-        texture.flipY = false;
+        texture.flipY = true;
         resolve(texture);
       },
       undefined,
