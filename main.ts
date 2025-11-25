@@ -4,10 +4,12 @@ import {createConeSquare, createFourWalls, createHeartCones,
          createUSB, createRaceTrack } from './src/utils/initializers.ts';
 import { setupControls} from './src/controls.ts';
 import { animate } from './src/utils/animation.ts';
+import { initHUD } from './src/hud.ts';
 
 initScene();
 createRaceTrack();
 setupControls();
+initHUD();
 createFourWalls();
 createFourWalls(20, 10, false);
 createKart();   

@@ -6,6 +6,8 @@ import type {Proyectils, StaticObjects } from './models/colisionClass';
 import { collisionObserver } from './utils/colliding';
 import { Coffee } from './coffee';
 import { Bomb } from './bomb';
+import { setPowerUpType, setPowerUpCount } from './hud';
+
 
 /**
  * Kart - visual and gameplay representation of the player's kart.
@@ -306,6 +308,8 @@ export class Kart {
       console.log(this.powerUpsList.position);
       switch (this.powerUps) {
         case 0:
+          setPowerUpType("shuriken");
+          setPowerUpCount(1);
           // Activate a single shuriken
           const shuriken1_case0 = new Shuriken();
           shuriken1_case0.parent = this;
@@ -316,6 +320,8 @@ export class Kart {
           this.powerUpsList.add(shuriken1_case0.getBody());
           break;
         case 1:
+          setPowerUpType("shuriken");
+          setPowerUpCount(2);
           // Activate two shurikens
           const shuriken1_case1 = new Shuriken();
           const shuriken2_case1 = new Shuriken();
@@ -332,6 +338,8 @@ export class Kart {
 
           break;
         case 2:
+          setPowerUpType("shuriken");
+          setPowerUpCount(3);
           // Activate three shurikens
           const shuriken1_case2 = new Shuriken();
           const shuriken2_case2 = new Shuriken();
@@ -352,6 +360,8 @@ export class Kart {
         case 3:
           // Activate bomb
           console.log("Bomba activada");
+          setPowerUpType("bomb");
+          setPowerUpCount(1);
           const bomb = new Bomb();
           bomb.setPosition(0,0.5,-4);
           this.proyectilesList.push(bomb);
@@ -360,11 +370,15 @@ export class Kart {
         case 4:
           // Activate coffee (speed consumable)
           console.log("Cafe activado");
+          setPowerUpType("coffee");
+          setPowerUpCount(1);
           const coffee1_case4 = new Coffee();
           coffee1_case4.setPosition(0, 0, -3);
           this.powerUpsList.add(coffee1_case4.getBody());
           break;
         case 5:
+          setPowerUpType("coffee");
+          setPowerUpCount(2);
           // Activate two coffees
           console.log("Dos cafes activados");
           const coffee1_case5 = new Coffee();
@@ -377,6 +391,8 @@ export class Kart {
           break;
         case 6:
           // Activate three coffees
+          setPowerUpType("coffee");
+          setPowerUpCount(3);
           console.log("Tres cafes activados");
           const coffee1_case6 = new Coffee();
           const coffee2_case6 = new Coffee();
