@@ -1,4 +1,4 @@
-# karThree_01_ci4321
+# karThree_02_ci4321
 Un pequeño prototipo 3D desarrollado con **Three.js** que simula un kart con físicas simples, colisiones, power-ups y proyectiles (como bombas y shurikens).  
 Desarrollado por Jesús Prieto y Jesús Cuéllar **The Yisus Team** en la materia **CI4321 Computación Gráfica I** de la Universidad Simón Bólivar.
 
@@ -9,12 +9,12 @@ Seguir las instrucciones y ejecutar el comando correspondiente.
 ### 1. Clonar el repositorio y entrar al directorio
 - 1. Clonar el repositorio:
 ```bash
-git clone https://github.com/JesusPrieto18/karThree_01_ci4321.git
-cd karThree_01_ci4321
+git clone https://github.com/JesusPrieto18/karThree_02_ci4321.git
+cd karThree_02_ci4321
 ```
 - 2. Entrar al directorio:
 ```bash
-cd karThree_01_ci4321
+cd karThree_02_ci4321
 ```
 - Instalar git (Linux);
 ```bash
@@ -33,13 +33,14 @@ npm install
 ```
 
 ### 4. Hacer el build del proyecto 
+Este paso no es necesario si se usa el modo de ejecución directo. 
 ```bash
 npm run build
 ```
 
 ### 5. Ejecutar
-Ya sea en modo desarollo o directo. 
-Para modo desarrollo se debe hacer el build.
+Para modo desarrollo se debe hacer el build (Paso anterior). 
+Se recomienda usar el modo directo.
 - **Desarrollo**  
 ```bash
 npm run dev
@@ -98,7 +99,21 @@ Se alternan con la tecla `C`.
 | **6** | Cafe Triple |
 |**Minus (-)**| Elimina el PowerUp Cargado para elegir otro |
 ---
+### Sistema de Puntación
 
+El sistema de puntuación para esta entrega se basa en sumar puntos cuando se carga un PowerUp. Solo se suma puntos en el instante que se adquiere el PowerUp y sin tener un PowerUp activo.
+
+| Puntuación | PowerUp |
+|-------|--------|
+| **100** | Shuriken |
+| **200**| Shuriken Doble |
+| **300** |Shuriken Triple|
+| **150** | Bomba |
+| **100** | Cafe |
+| **200** | Cafe Doble |
+| **300** | Cafe Triple |
+
+---
 ## Sistema de colisiones
 
 El proyecto usa un **Collision Observer** central que mantiene una lista de objetos registrables (`CollisionClassName`):
@@ -120,27 +135,28 @@ El proyecto usa un **Collision Observer** central que mantiene una lista de obje
 src/
 │
 ├── models/
+├── textures/
 │  ├── colisionClass #Contiene las Clases que colisionan 
 ├── utils/ #Diferentes utilidades para facilitar ciertos procesos
     ├── animation.ts
     ├── cameraControls.ts
     ├── colliding.ts #Aquí esta la logica para el patro Observer usado para colisones
+    ├── textureManager.ts
     ├── initializers.ts
-    ├── animation.ts
 │ ├── bomb.ts # Clase Bomb → proyectil con gravedad y temporizador de explosión
 │ ├── box.ts # Genera cajas u obstáculos simples en la pista
 │ ├── coffee.ts # Power-up tipo “café” que otorga velocidad
 │ ├── controls.ts # Manejo de teclas y controles del jugador (movimiento, disparo, cámara)
+│ ├── Ground.ts 
+│ ├── hud.ts # Interfaz 2D implementando Sprite Atlas
 │ ├── kart.ts # Clase principal del Kart (posición, rotación, animación, lanzamiento de power-ups)
-│ ├── obstacles.ts # Gestión de obstáculos en la pista
 │ ├── powerUps.ts # Manejo de objetos recogibles y su lógica (activar, girar, lanzar)
-│ ├── racetrack.ts # Crea la pista principal del juego
-│ ├── RaceTrackClass.ts # Clase RaceTrack → encapsula la pista y sus interacciones (colisiones, suelo)
-│ ├──  scene.ts # Configura la escena principal de Three.js (luz, cámara, render)
+│ ├── RaceTrack.ts # Clase RaceTrack → encapsula la pista y sus interacciones (colisiones, suelo)
+│ ├── scene.ts # Configura la escena principal de Three.js (luz, cámara, render)
 │ ├── shuriken.ts # Clase Shuriken → proyectil giratorio
 │ ├── shurikenInfo.ts # Datos de geometría (vértices y colores) del shuriken
 │ ├── trafficCone.ts # Clase TrafficCone → obstáculo tipo cono con colisión
-│ ├── usb.ts 
+│ ├── usb.ts #Objeto para el Modelo de USB siglas
 │ ├── walls.ts # Clase Walls → muros y límites de la pista
 │
 |── .gitignore 
@@ -151,7 +167,9 @@ src/
 |── package.json
 |── README.md
 |── style.css
+|── texture.json
 |── tsconfig.json 
+|── update.ts
 ```
 ## Tecnologías usadas
 - ThreeJS

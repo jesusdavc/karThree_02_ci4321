@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import type { CollisionClassName, ReflectObjects, StaticObjects } from "../models/colisionClass";
 import { Shuriken } from "../shuriken";
+import type { roughness } from "three/tsl";
 
 /**
  * Utility functions used across the project.
@@ -27,17 +28,26 @@ import { Shuriken } from "../shuriken";
  */
 export function solidWithWire(
   geometry: THREE.BufferGeometry,
-  color: number,
+  color?: number,
   transparent = true,
   wireColor = 0x111111,
+  aoMap?: THREE.Texture,
+  texture?: THREE.Texture,
+  normalTexture?: THREE.Texture,
+  roughnessTexture?: THREE.Texture,
+  displacementTexture?: THREE.Texture,
+  metalnessTexture?: THREE.Texture,
+  roughness = 0.3, 
+  metalness = 0.8
 ): THREE.Group {
   const group = new THREE.Group();
-
   const solid = new THREE.Mesh(
     geometry,
-    new THREE.MeshStandardMaterial({ color, metalness: 0.1, roughness: 0.6 })
+    new THREE.MeshStandardMaterial({ color, 
+      aoMap: aoMap, map: texture, normalMap: normalTexture, roughnessMap: roughnessTexture, roughness: roughness, 
+      displacementMap: displacementTexture, metalnessMap: metalnessTexture, metalness: metalness,  })
   );
-
+  //solid.castShadow = true;
   if (transparent) {
     // wireframe overlay (same geometry, different material)
     const wire = new THREE.Mesh(
@@ -296,4 +306,18 @@ export function resolvePenetrationObstacles(
   // convert back into the kart parent's local space
   const parent = reflect.getBody().parent!;
   reflect.getBody().position.copy(parent.worldToLocal(worldPos.clone()));
+}
+
+/**
+ * disposeMesh - utility to dispose geometry and material resources of a Mesh.
+ * Call this when removing a mesh from the scene to avoid memory leaks.
+ * Parameters:
+ *  - obj: Object3D to dispose (cast to Mesh internally).
+ */
+
+export function disposeMesh(obj: THREE.Object3D) {
+  const mesh = obj as THREE.Mesh;
+  if (mesh.geometry) mesh.geometry.dispose();
+  if (Array.isArray(mesh.material)) mesh.material.forEach(m => (m as THREE.Material).dispose());
+  else if (mesh.material) (mesh.material as THREE.Material).dispose();
 }

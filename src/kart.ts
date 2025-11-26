@@ -1,11 +1,14 @@
 import * as THREE from 'three';
 import { scene } from './scene';
-import {solidWithWire, reflectDirection } from './utils/utils';
+import {solidWithWire, reflectDirection, disposeMesh } from './utils/utils';
 import { Shuriken } from './shuriken';
 import type {Proyectils, StaticObjects } from './models/colisionClass';
 import { collisionObserver } from './utils/colliding';
 import { Coffee } from './coffee';
 import { Bomb } from './bomb';
+import { getTexture } from './utils/textureManager';
+import { setPowerUpType, setPowerUpCount, showFloatingPoints, addPoints } from './hud';
+
 
 /**
  * Kart - visual and gameplay representation of the player's kart.
@@ -52,8 +55,8 @@ export class Kart {
   private isActivatePowerUps: boolean = false;
   private powerUpsList: THREE.Group = new THREE.Group(); // visual holder for active power-ups
   private proyectilesList: Proyectils[] = []; // stored projectile instances (not yet launched)
-  private proyectilLaunched: Proyectils[] = []  // projectiles that have been launched
-
+  private proyectilLaunched: Map<number, Proyectils> = new Map();  // projectiles that have been launched
+  private countProyectilesLaunched: number = 0;
   /**
    * Constructor - builds the kart's visual components (chassis, extras, wheels),
    * adds the kart to the global scene and registers it with the collision observer.
@@ -66,14 +69,32 @@ export class Kart {
     // Build chassis geometry and material, then wrap with helper that provides a visible wire
     const body = new THREE.BoxGeometry(length, height, width);
     body.translate(0, height / 3, 0);
-    const material_color = 0xFFE900;
-    const material_color_dark = 0x000000;
-    this.kartChassis = solidWithWire(body, material_color, false);
+    const material_color = 0xF7EA48;
+    const material_color_dark = 0x1D252D;
+    const textureLoader = new THREE.TextureLoader(); 
+    
+    // Textures for the kart 
+    const yellowTexture = getTexture("kar.yellowTexture");
+    yellowTexture.wrapS = THREE.RepeatWrapping;
+    yellowTexture.wrapT = THREE.RepeatWrapping;
+    yellowTexture.repeat.set(length+1, height+1)
+
+    const yellowTextureNormal = getTexture("kar.yellowNormal");
+    yellowTextureNormal.wrapS = THREE.RepeatWrapping;
+    yellowTextureNormal.wrapT = THREE.RepeatWrapping;
+    yellowTextureNormal.repeat.set(length+1, height+1)
+
+    const blackTexture = getTexture("kar.blackTexture");
+    const blackTextureNormal = getTexture("kar.blackNormal");
+    
+    this.kartChassis = solidWithWire(body, material_color, false, undefined,undefined, yellowTexture, yellowTextureNormal);
     this.kartChassis.name = "kartChassis";
 
+    // Set material karTChassis
+    
     // Decorative elements (hood, trims, lights, windows, exhaust) added to the chassis
     let capo = new THREE.CylinderGeometry(6.3,9,4.3,4); // decorative hood
-    let material_capo = new THREE.MeshStandardMaterial({ color: material_color });
+    let material_capo = new THREE.MeshStandardMaterial({ color:material_color, map: yellowTexture, normalMap: yellowTextureNormal, roughness: 0.3, metalness: 0.8});
     let mesh_capo = new THREE.Mesh(capo, material_capo);
     mesh_capo.rotation.y = Math.PI / 4;
     mesh_capo.scale.set(0.15,0.15,0.15);
@@ -81,42 +102,43 @@ export class Kart {
     this.kartChassis.add(mesh_capo);
 
     let tope = new THREE.BoxGeometry(0.6,0.2,1);
-    let material_tope = new THREE.MeshStandardMaterial({ color: material_color });
+    let material_tope = new THREE.MeshStandardMaterial({color:material_color, map: yellowTexture, normalMap: yellowTextureNormal, roughness: 0.3, metalness: 0.8});
     let mesh_tope = new THREE.Mesh(tope, material_tope);
     mesh_tope.position.set(0,0.8,0.8);
     mesh_tope.rotateX(Math.PI/16);
     this.kartChassis.add(mesh_tope);
 
     let tope_left = new THREE.BoxGeometry(0.2,0.2,1);
-    let material_tope_left = new THREE.MeshStandardMaterial({ color: material_color_dark });
+    let material_tope_left = new THREE.MeshStandardMaterial({ color: material_color_dark, map: blackTexture, normalMap: blackTextureNormal,roughness: 20.0, metalness: 1 });
     let mesh_tope_left = new THREE.Mesh(tope_left, material_tope_left);
     mesh_tope_left.position.set(-0.3,0.8001,0.8);
     mesh_tope_left.rotateX(Math.PI/16);
     this.kartChassis.add(mesh_tope_left);
 
     let tope_right = new THREE.BoxGeometry(0.2,0.2,1);
-    let material_tope_right = new THREE.MeshStandardMaterial({ color: material_color_dark });
+    let material_tope_right = new THREE.MeshStandardMaterial({ color: material_color_dark, map: blackTexture, normalMap: blackTextureNormal,roughness: 20.0, metalness: 1 });
     let mesh_tope_right = new THREE.Mesh(tope_right, material_tope_right);
     mesh_tope_right.position.set(0.3,0.8001,0.8);
     mesh_tope_right.rotateX(Math.PI/16);
     this.kartChassis.add(mesh_tope_right);
 
     let Franja_derecha = new THREE.BoxGeometry(0.4,0.4,4.49);
-    let material_Franja_derecha = new THREE.MeshStandardMaterial({ color: material_color_dark });
+    let material_Franja_derecha = new THREE.MeshStandardMaterial({ color: material_color_dark, map: blackTexture, normalMap: blackTextureNormal,roughness: 20.0, metalness: 1 });
     let mesh_Franja_derecha = new THREE.Mesh(Franja_derecha, material_Franja_derecha);
     mesh_Franja_derecha.position.set(-0.4,0.64,0);
     this.kartChassis.add(mesh_Franja_derecha);
 
     let Franja_izquierda = new THREE.BoxGeometry(0.4,0.4,4.49);
-    let material_Franja_izquierda = new THREE.MeshStandardMaterial({ color: material_color_dark });
+    let material_Franja_izquierda = new THREE.MeshStandardMaterial({ color: material_color_dark, map: blackTexture, normalMap: blackTextureNormal,roughness: 20.0, metalness: 1 });
     let mesh_Franja_izquierda = new THREE.Mesh(Franja_izquierda, material_Franja_izquierda);
     mesh_Franja_izquierda.position.set(0.4,0.64,0);
     this.kartChassis.add(mesh_Franja_izquierda);
-
+      
     let color_gris = 0x555555;
-
+    const metalTexture = getTexture("kar.metalTexture");
+    const metalTextureNormal = getTexture("kar.metalNormal");
     let parachoques = new THREE.BoxGeometry(2.09,0.3,0.45);
-    let material_parachoques = new THREE.MeshStandardMaterial({ color: color_gris });
+    let material_parachoques = new THREE.MeshStandardMaterial({ color: color_gris, map: metalTexture, normalMap: metalTextureNormal, roughness: 1.0, metalness: 1.0 });
     let mesh_parachoques = new THREE.Mesh(parachoques, material_parachoques);
     mesh_parachoques.position.set(0,0.2,2.09);
     this.kartChassis.add(mesh_parachoques);
@@ -131,9 +153,11 @@ export class Kart {
     mesh_luces_delanteras2.position.set(0.5,0.6,2.21);
     this.kartChassis.add(mesh_luces_delanteras2);
 
+    const ventanaTexture = getTexture("kar.windowTexture");
+    const ventanaTextureNormal = getTexture("kar.windowNormal");
     let color_ventana = 0x3F4444;
     let ventana_frontal = new THREE.CylinderGeometry(6.3,9,4.2,4); // window shapes
-    let material_ventana = new THREE.MeshStandardMaterial({ color: color_ventana });
+    let material_ventana = new THREE.MeshStandardMaterial({ color:color_ventana, map: ventanaTexture, normalMap:ventanaTextureNormal });
     let mesh_ventanaFrontal = new THREE.Mesh(ventana_frontal, material_ventana);
     mesh_ventanaFrontal.rotation.y = Math.PI / 4;
     mesh_ventanaFrontal.scale.set(0.125,0.125,0.125);
@@ -161,8 +185,9 @@ export class Kart {
     mesh_ventanaLateralDerecha.position.set(0.15,1.12,-0.7);
     this.kartChassis.add(mesh_ventanaLateralDerecha);
 
+
     let tubo_escape = new THREE.CylinderGeometry(0.1,0.1,0.4);
-    let material_tubo_escape = new THREE.MeshStandardMaterial({ color: color_gris });
+    let material_tubo_escape = new THREE.MeshStandardMaterial({ color: color_gris, map: metalTexture, normalMap: metalTextureNormal, roughness: 1.0, metalness: 1.0});
     let mesh_tubo_escape = new THREE.Mesh(tubo_escape, material_tubo_escape);
     mesh_tubo_escape.rotation.x = Math.PI / 2;
     mesh_tubo_escape.position.set(-0.5,0.2,-2.15);
@@ -171,13 +196,15 @@ export class Kart {
 
     // Assemble kart group and add helper axes for debugging
     this.kart.add(this.kartChassis);
-    this.kart.position.set(0, 0.6,-3);
+    this.kart.position.set(0, 0.7,-3);
     //this.kart.add(new THREE.AxesHelper(3));
 
     // Wheels and axes setup
     this.wheelAxisGroup = new THREE.Group();
     const wheelGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.3, 8);
-    const wheelMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+    const wheelTexture = getTexture("kar.wheelTexture");
+    const wheelTextureNormal = getTexture("kar.wheelNormal");
+    const wheelMaterial = new THREE.MeshStandardMaterial({ color: 0x333333, map:wheelTexture, normalMap:wheelTextureNormal });
     
     const wheelPositionsFront = [
       [-1.3, -0.2, -1.2],
@@ -304,8 +331,22 @@ export class Kart {
 
       this.powerUpsList.position.copy(this.kart.position);
       console.log(this.powerUpsList.position);
+    const powerUpPoints: { [key: number]: number } = {
+      0: 100,  // 1 shuriken
+      1: 200,  // 2 shurikens
+      2: 300,  // 3 shurikens
+      3: 150,  // bomba
+      4: 100,  // 1 café
+      5: 200,  // 2 cafés
+      6: 300   // 3 cafés
+    };
+    
+    const pointsEarned = powerUpPoints[count] || 100;
+
       switch (this.powerUps) {
         case 0:
+          setPowerUpType("shuriken");
+          setPowerUpCount(1);
           // Activate a single shuriken
           const shuriken1_case0 = new Shuriken();
           shuriken1_case0.parent = this;
@@ -314,8 +355,14 @@ export class Kart {
           // Store instance and add its mesh to the power-up group
           this.proyectilesList.push(shuriken1_case0);
           this.powerUpsList.add(shuriken1_case0.getBody());
+
+          // Set index for launched projectiles tracking
+          shuriken1_case0.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
           break;
         case 1:
+          setPowerUpType("shuriken");
+          setPowerUpCount(2);
           // Activate two shurikens
           const shuriken1_case1 = new Shuriken();
           const shuriken2_case1 = new Shuriken();
@@ -330,8 +377,16 @@ export class Kart {
           this.proyectilesList.push(shuriken1_case1, shuriken2_case1);
           this.powerUpsList.add(shuriken1_case1.getBody(), shuriken2_case1.getBody());
 
+          // Set indices for launched projectiles tracking
+          shuriken1_case1.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
+          shuriken2_case1.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
+
           break;
         case 2:
+          setPowerUpType("shuriken");
+          setPowerUpCount(3);
           // Activate three shurikens
           const shuriken1_case2 = new Shuriken();
           const shuriken2_case2 = new Shuriken();
@@ -348,23 +403,42 @@ export class Kart {
           // Store instances and add meshes
           this.proyectilesList.push(shuriken1_case2, shuriken2_case2, shuriken3_case2);
           this.powerUpsList.add(shuriken1_case2.getBody(), shuriken2_case2.getBody(), shuriken3_case2.getBody());
+
+          // Set indices for launched projectiles tracking
+          shuriken1_case2.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
+          shuriken2_case2.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
+          shuriken3_case2.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
+
           break;
         case 3:
           // Activate bomb
           console.log("Bomba activada");
+          setPowerUpType("bomb");
+          setPowerUpCount(1);
           const bomb = new Bomb();
           bomb.setPosition(0,0.5,-4);
           this.proyectilesList.push(bomb);
           this.powerUpsList.add(bomb.getBody());
+
+          // Set index for launched projectiles tracking
+          bomb.setIndex(this.countProyectilesLaunched);
+          this.countProyectilesLaunched++;
           break;
         case 4:
           // Activate coffee (speed consumable)
           console.log("Cafe activado");
+          setPowerUpType("coffee");
+          setPowerUpCount(1);
           const coffee1_case4 = new Coffee();
           coffee1_case4.setPosition(0, 0, -3);
           this.powerUpsList.add(coffee1_case4.getBody());
           break;
         case 5:
+          setPowerUpType("coffee");
+          setPowerUpCount(2);
           // Activate two coffees
           console.log("Dos cafes activados");
           const coffee1_case5 = new Coffee();
@@ -377,6 +451,8 @@ export class Kart {
           break;
         case 6:
           // Activate three coffees
+          setPowerUpType("coffee");
+          setPowerUpCount(3);
           console.log("Tres cafes activados");
           const coffee1_case6 = new Coffee();
           const coffee2_case6 = new Coffee();
@@ -389,6 +465,8 @@ export class Kart {
           this.powerUpsList.add(coffee1_case6.getBody(), coffee2_case6.getBody(), coffee3_case6.getBody());
           break;
       }
+      showFloatingPoints(this.kart.position, pointsEarned);
+      addPoints(pointsEarned);
       scene.add(this.powerUpsList);
 
     } else {
@@ -419,7 +497,9 @@ export class Kart {
           const index = this.proyectilesList.findIndex((proy) => proy.getBody() === powerUpMesh);
 
           const proyectil = this.proyectilesList[index];
+
           proyectil.addScene();
+
           if(proyectil instanceof Shuriken){
             proyectil.setVelocity(this.kart);
           }
@@ -439,7 +519,10 @@ export class Kart {
           }
 
           // Move instance from proyectilesList to proyectilLaunched
-          this.proyectilLaunched.push(this.proyectilesList.pop()!);
+          //this.proyectilLaunched.push(this.proyectilesList.pop()!);
+          this.proyectilLaunched.set(proyectil.getIndex(), proyectil);
+          //this.proyectilesList.splice(index, 1);
+          console.log("Proyectil lanzado");
 
           break;
         case 4:
@@ -450,15 +533,17 @@ export class Kart {
           this.activateSpeedBoost(performance.now(), 3000);
           break;
       }
-
+      // Update HUD with current power-up type and count
       console.log(this.powerUpsList.children.length);
     } 
-
+    setPowerUpCount(this.powerUpsList.children.length);
     // If visual list empty, reset power-up state
     if (this.powerUpsList.children.length === 0 && this.isActivatePowerUps) {
       this.isActivatePowerUps = false;
       this.powerUps = -1;
       console.log("No tienes power ups ");
+      setPowerUpCount(0);
+      setPowerUpType("none");
     }
   }
 
@@ -471,6 +556,10 @@ export class Kart {
     console.log("Proyectil removido de la lista");
   }
 
+  public removeProyectilFromMap(index: number): void {
+    this.proyectilLaunched.delete(index);
+    console.log("Proyectil removido de la lista");
+  }
   /**
    * activateSpeedBoost - enable a temporary speed boost.
    * @param now: current timestamp in ms (performance.now()).
@@ -498,10 +587,15 @@ export class Kart {
    * - Also reset activation flags.
    */
   public clearPowerUps(): void {
-    this.powerUpsList.children.forEach((powerUp) => {
-      this.powerUpsList.remove(powerUp);
-    });
-    this.proyectilesList = [];
+    while (this.powerUpsList.children.length) {
+      const child = this.powerUpsList.children.pop()!;      
+      this.powerUpsList.remove(child);
+      disposeMesh(child);
+
+      const proyectil = this.proyectilesList.pop()!;
+      collisionObserver.addObjectToRemove(proyectil)
+    }
+    collisionObserver.removeSelectedObjects();
     this.isActivatePowerUps = false;
     this.powerUps = -1;
     console.log("Power ups limpiados");
@@ -575,18 +669,17 @@ export class Kart {
     this.powerUpsList.position.copy(this.kart.position);
     
     // Advance launched projectiles: call update for bombs (physics) and simple movement for others
-    for (let i = 0; i < this.proyectilLaunched.length; i++) {
-      const proyectil = this.proyectilLaunched[i];
+    for (let [, proyectil] of this.proyectilLaunched) {
+      //console.log(proyectil);
       if (proyectil instanceof Bomb) {
             proyectil.update(deltaTime); // gravity, explosion, etc.
       } else {
         proyectil.moveForward(0.9);
         proyectil.rotateY(0.1);
-      }
+      }      
     };
     
   }
-
 
 }
 

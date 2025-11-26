@@ -2,6 +2,7 @@ import { kart } from './utils/initializers';
 import { calculateWheelRotation} from './utils/utils';
 import { camera } from './scene.ts';
 import * as THREE from 'three';
+import { updateVelocity } from './hud.ts';
 
 /**
  * Input state map: stores whether a key is currently pressed.
@@ -86,6 +87,7 @@ export function updateControls(): void {
   if (keys['ArrowDown']) kart.speed = Math.max(-kart.maxSpeed/2, kart.speed - 0.005);
   if (keys['ArrowUp']) kart.speed = Math.min(kart.maxSpeed, kart.speed + 0.005);
   if (!keys['ArrowUp'] && !keys['ArrowDown']) kart.speed *= 0.95;
+  updateVelocity(kart.speed, kart.maxSpeed);
 
   // Steering: adjust steeringAngle and rotate kart body when moving
   if (keys['ArrowRight']) {
@@ -145,6 +147,7 @@ export function updateControls(): void {
   kart.getWheelsBackAxis().rotation.y = kart.steeringAngle;
 
   // Update camera position/orientation based on current cameraMode and rMode
+  
   changeCameraPosition(cameraMode, rMode);
   if (cameraMode === 0) {
     // In third-person camera mode make camera look at the kart position

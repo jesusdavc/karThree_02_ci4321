@@ -4,6 +4,7 @@ import { scene } from './scene';
 import { collisionObserver } from './utils/colliding';
 import { Kart } from './kart';
 import type { CollisionClassName } from './models/colisionClass';
+import { getTexture } from './utils/textureManager';
 
 /**
  * Walls - simple rectangular wall obstacle used in the scene.
@@ -40,8 +41,45 @@ export class Walls {
 
         // Build a thin box geometry to represent the wall
         const wallGeometry1 = new THREE.BoxGeometry(this.wallLength, this.wallHeight, this.wallThickness);
-        const wallColor = 0x506468; // neutral color for walls (was Spanish comment)
-        this.wall = solidWithWire(wallGeometry1, wallColor, false);
+        const wallColor = 0x94A596; // neutral color for walls (was Spanish comment)
+        
+        // Load wall textures
+
+        const aoTextureBase = getTexture('wall.ao');
+        const aoTexture = aoTextureBase.clone();
+        aoTexture.needsUpdate = true;
+        aoTexture.wrapS = THREE.RepeatWrapping;
+        aoTexture.wrapT = THREE.RepeatWrapping;
+        aoTexture.repeat.set(this.wallLength / 2, this.wallHeight / 2);
+
+        // Color
+        const textureBase = getTexture('wall.texture');
+        const texture = textureBase.clone();
+        texture.needsUpdate = true;
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(this.wallLength / 2, this.wallHeight / 2);
+
+        // Normal
+        const normalBase = getTexture('wall.normal');
+        const normalTexture = normalBase.clone();
+        normalTexture.needsUpdate = true;
+        normalTexture.wrapS = THREE.RepeatWrapping;
+        normalTexture.wrapT = THREE.RepeatWrapping;
+        normalTexture.repeat.set(this.wallLength / 2, this.wallHeight / 2);
+
+        // Roughness
+        const roughBase = getTexture('wall.roughness');
+        const roughnessTexture = roughBase.clone();
+        roughnessTexture.needsUpdate = true;
+        roughnessTexture.wrapS = THREE.RepeatWrapping;
+        roughnessTexture.wrapT = THREE.RepeatWrapping;
+        roughnessTexture.repeat.set(this.wallLength / 2, this.wallHeight / 2);
+
+        this.wall = solidWithWire(wallGeometry1, wallColor, false,undefined, 
+            aoTexture, texture, normalTexture, roughnessTexture, undefined, undefined, 
+            0.1, 0.1);
+        
         // Add a small axes helper to visualize orientation during debugging
         //this.wall.add(new THREE.AxesHelper(3));
 

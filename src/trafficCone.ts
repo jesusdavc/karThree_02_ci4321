@@ -6,6 +6,7 @@ import { Shuriken } from './shuriken';
 import { collisionObserver } from './utils/colliding';
 import { Kart } from './kart';
 import { Bomb } from './bomb';
+import { getTexture } from './utils/textureManager';
 
 /**
  * TrafficCone - builds a visual traffic cone composed of a cone + base + white bands.
@@ -33,13 +34,17 @@ export class TrafficCone {
      *  4. Scale and position the assembled Group, add to scene and optionally register for collisions.
      */
     private buildTrafficCone(addColision: boolean): void {
+        // Texture
+        const aoTexture = getTexture('trafficCone.ao');
+        const textureNormal = getTexture('trafficCone.normal');
+        
         // Traffic cone body
         const coneHeight = 2;
         const coneRadius = 0.5;
         const coneGeometry = new THREE.ConeGeometry(coneRadius, coneHeight, 8);
         const coneColor = 0xff0000;
 
-        const cone = solidWithWire(coneGeometry, coneColor, false);
+        const cone = solidWithWire(coneGeometry, coneColor, false, undefined, aoTexture, undefined, textureNormal);
         this.trafficCone.add(cone);
 
         // Black base block
@@ -47,27 +52,27 @@ export class TrafficCone {
         const baseLength = 1.2;
         const baseThickness = 1.2;
         const baseGeometry = new THREE.BoxGeometry(baseLength, baseHeight, baseThickness);
-        const baseColor = 0x000000;
+        const baseColor = 0x2c2c2c;
 
-        const base = solidWithWire(baseGeometry, baseColor, false);
+        const base = solidWithWire(baseGeometry, baseColor, false, undefined, aoTexture, undefined, textureNormal);
         base.position.set(0, -1, 0);
         this.trafficCone.add(base);
 
         // Lower white band
         const markerHeight = 0.3;
         const markerGeometry = new THREE.CylinderGeometry(0.35, 0.42, markerHeight, 8);
-        const markerColor = 0xffffff;
-        const marker = solidWithWire(markerGeometry, markerColor, false);
+        const markerColor = 0xe0d8d8;
+        const marker = solidWithWire(markerGeometry, markerColor, false, undefined, aoTexture, undefined, textureNormal);
         marker.position.set(0, -0.5, 0);
 
         // Middle white band
         const markerGeometry2 = new THREE.CylinderGeometry(0.22, 0.31, markerHeight, 8);
-        const marker2 = solidWithWire(markerGeometry2, markerColor, false);
+        const marker2 = solidWithWire(markerGeometry2, markerColor, false, undefined, aoTexture, undefined, textureNormal);
         marker2.position.set(0, 0, 0);
 
         // Upper white band
         const markerGeometry3 = new THREE.CylinderGeometry(0.09, 0.19, markerHeight, 8);
-        const marker3 = solidWithWire(markerGeometry3, markerColor, false);
+        const marker3 = solidWithWire(markerGeometry3, markerColor, false, undefined, aoTexture, undefined, textureNormal);
         marker3.position.set(0, 0.5, 0);
 
         this.trafficCone.add(marker, marker2, marker3);

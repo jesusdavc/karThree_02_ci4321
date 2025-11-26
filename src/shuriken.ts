@@ -29,6 +29,8 @@ export class Shuriken {
   private launched: boolean = false;
   // Number of times the shuriken has bounced against walls
   private bounces: number = 0;
+  // Index to identify this shuriken in parent's launched projectiles list
+  private index: number = -1;
   // Optional back-reference to the kart that launched it
   public parent: Kart | undefined = undefined;
 
@@ -40,7 +42,22 @@ export class Shuriken {
   constructor(name?: string) {
     this.name = name;
     const geometry = this.buildGeometry();
-    const material = new THREE.MeshStandardMaterial({ vertexColors: true });
+    /*
+    const loader = new THREE.TextureLoader();
+    const aoTexture = loader.load('src\\textures\\PowerUps\\Shuriken\\metal_0080_ao_1k.jpg');
+    aoTexture.wrapS = THREE.RepeatWrapping;
+    aoTexture.wrapT = THREE.RepeatWrapping;
+    aoTexture.repeat.set(10, 10);
+    const texture = loader.load('src\\textures\\\PowerUps\\Shuriken\\metal_0080_color_1k.jpg');
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(10,10)
+    const textureNormal = loader.load('src\\textures\\PowerUps\\Shuriken\\metal_0080_normal_directx_1k.png');
+    textureNormal.wrapS = THREE.RepeatWrapping;
+    textureNormal.wrapT = THREE.RepeatWrapping;
+    textureNormal.repeat.set(10,10)
+    */
+    const material = new THREE.MeshStandardMaterial({vertexColors: true });
     this.mesh = new THREE.Mesh(geometry, material);
     if (this.name) this.mesh.name = this.name;
     this.mesh.scale.set(0.1, 0.1, 0.1);
@@ -188,6 +205,19 @@ export class Shuriken {
   }
 
   /**
+   * setIndex / getIndex - set and get the index used to identify this shuriken
+   * in the parent's launched projectiles list.
+   */
+
+  public setIndex(index: number): void {
+    this.index = index;
+  }
+
+  public getIndex(): number {
+    return this.index;
+  }
+
+  /**
    * isColliding - collision callback used by the collision system.
    * - reacts to TrafficCone collisions by removing the shuriken from its parent list
    *   and scheduling this instance for observer removal.
@@ -209,6 +239,7 @@ export class Shuriken {
           this.mesh.parent.remove(this.mesh);
         } else {
           this.deleteScene();
+          this.parent?.removeProyectilFromMap(this.index);
         }
         // schedule this shuriken instance for removal from collision observer arrays
         collisionObserver.addObjectToRemove(this);
