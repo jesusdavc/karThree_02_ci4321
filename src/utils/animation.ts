@@ -28,7 +28,7 @@ export function animate(now: number): void {
 
 function animateDir(now: number): void {
   const seconds = now * 0.001;
-  // params: ajusta radius / height / speed a tu gusto
+  // params: ajusta radius / height / speed 
   const radius = 80;
   const height = 40;
   const speed = 0.1; // rad/s
