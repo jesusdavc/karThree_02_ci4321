@@ -6,6 +6,7 @@ import { Shuriken } from './shuriken';
 import { collisionObserver } from './utils/colliding';
 import { Kart } from './kart';
 import { Bomb } from './bomb';
+import { getTexture } from './utils/textureManager';
 
 /**
  * TrafficCone - builds a visual traffic cone composed of a cone + base + white bands.
@@ -34,11 +35,8 @@ export class TrafficCone {
      */
     private buildTrafficCone(addColision: boolean): void {
         // Texture
-
-        const loader = new THREE.TextureLoader();
-        const aoTexture = loader.load('src\\textures\\StacticObjects\\Conne\\plastic_0020_ao_1k.jpg');
-        const texture = loader.load('src\\textures\\StacticObjects\\Conne\\plastic_0020_color_1k.jpg');
-        const textureNormal = loader.load('src\\textures\\StacticObjects\\Conne\\plastic_0020_normal_direct_1k.png');
+        const aoTexture = getTexture('trafficCone.ao');
+        const textureNormal = getTexture('trafficCone.normal');
         
         // Traffic cone body
         const coneHeight = 2;

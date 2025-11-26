@@ -6,6 +6,7 @@ import type {Proyectils, StaticObjects } from './models/colisionClass';
 import { collisionObserver } from './utils/colliding';
 import { Coffee } from './coffee';
 import { Bomb } from './bomb';
+import { getTexture } from './utils/textureManager';
 
 /**
  * Kart - visual and gameplay representation of the player's kart.
@@ -71,18 +72,18 @@ export class Kart {
     const textureLoader = new THREE.TextureLoader(); 
     
     // Textures for the kart 
-    const yellowTexture = textureLoader.load("src\\textures\\Kar\\metal_0081_ao_1k.jpg")
+    const yellowTexture = getTexture("kar.yellowTexture");
     yellowTexture.wrapS = THREE.RepeatWrapping;
     yellowTexture.wrapT = THREE.RepeatWrapping;
     yellowTexture.repeat.set(length+1, height+1)
 
-    const yellowTextureNormal = textureLoader.load("src\\textures\\Kar\\metal_0081_normal_directx_1k.png")
+    const yellowTextureNormal = getTexture("kar.yellowNormal");
     yellowTextureNormal.wrapS = THREE.RepeatWrapping;
     yellowTextureNormal.wrapT = THREE.RepeatWrapping;
     yellowTextureNormal.repeat.set(length+1, height+1)
 
-    const blackTexture = textureLoader.load("src\\textures\\Kar\\Metal033_1K-JPG_Color.jpg")
-    const blackTextureNormal = textureLoader.load("src\\textures\\Kar\\Metal033_1K-JPG_NormalGL.jpg")
+    const blackTexture = getTexture("kar.blackTexture");
+    const blackTextureNormal = getTexture("kar.blackNormal");
     
     this.kartChassis = solidWithWire(body, material_color, false, undefined,undefined, yellowTexture, yellowTextureNormal);
     this.kartChassis.name = "kartChassis";
@@ -132,8 +133,8 @@ export class Kart {
     this.kartChassis.add(mesh_Franja_izquierda);
       
     let color_gris = 0x555555;
-    const metalTexture = textureLoader.load("src\\textures\\Kar\\metal_0002_color_1k.jpg");
-    const metalTextureNormal = textureLoader.load("src\\textures\\Kar\\metal_0002_normal_directx_1k.png");
+    const metalTexture = getTexture("kar.metalTexture");
+    const metalTextureNormal = getTexture("kar.metalNormal");
     let parachoques = new THREE.BoxGeometry(2.09,0.3,0.45);
     let material_parachoques = new THREE.MeshStandardMaterial({ color: color_gris, map: metalTexture, normalMap: metalTextureNormal, roughness: 1.0, metalness: 1.0 });
     let mesh_parachoques = new THREE.Mesh(parachoques, material_parachoques);
@@ -150,8 +151,8 @@ export class Kart {
     mesh_luces_delanteras2.position.set(0.5,0.6,2.21);
     this.kartChassis.add(mesh_luces_delanteras2);
 
-    const ventanaTexture = textureLoader.load("src\\textures\\Kar\\decals_0008_color_1k.jpg")
-    const ventanaTextureNormal = textureLoader.load("src\\textures\\Kar\\decals_0008_normal_directx_1k.png")
+    const ventanaTexture = getTexture("kar.windowTexture");
+    const ventanaTextureNormal = getTexture("kar.windowNormal");
     let color_ventana = 0x3F4444;
     let ventana_frontal = new THREE.CylinderGeometry(6.3,9,4.2,4); // window shapes
     let material_ventana = new THREE.MeshStandardMaterial({ color:color_ventana, map: ventanaTexture, normalMap:ventanaTextureNormal });
@@ -199,8 +200,8 @@ export class Kart {
     // Wheels and axes setup
     this.wheelAxisGroup = new THREE.Group();
     const wheelGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.3, 8);
-    const wheelTexture = textureLoader.load("src\\textures\\Kar\\plastic_0022_ao_1k.jpg");
-    const wheelTextureNormal = textureLoader.load("src\\textures\\Kar\\plastic_0022_normal_1k.jpg");
+    const wheelTexture = getTexture("kar.wheelTexture");
+    const wheelTextureNormal = getTexture("kar.wheelNormal");
     const wheelMaterial = new THREE.MeshStandardMaterial({ color: 0x333333, map:wheelTexture, normalMap:wheelTextureNormal });
     
     const wheelPositionsFront = [

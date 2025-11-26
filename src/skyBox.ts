@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { scene } from './scene';
+import { getTexture } from './utils/textureManager';
 
 export class SkyBox {
     private skyBoxMesh: THREE.Mesh;
@@ -19,8 +20,7 @@ export class SkyBox {
     ];
 
     constructor() {
-        const loader = new THREE.TextureLoader();
-        this.createFacesFromAtlas('src\\textures\\Sky\\Cubemap\\Cubemap_Sky_05-512x512.png', loader);
+        this.createFacesFromAtlas();
         const materials = this.faceTextures.map(tex =>
             new THREE.MeshBasicMaterial({ map: tex, side: THREE.BackSide })
         );
@@ -30,8 +30,8 @@ export class SkyBox {
         scene.add(this.skyBoxMesh);
     }
 
-    private createFacesFromAtlas(path: string, loader: THREE.TextureLoader ): void{
-        const atlas = loader.load(path);
+    private createFacesFromAtlas(): void{
+        const atlas = getTexture("sky.cubemapr");
 
         atlas.wrapS = THREE.ClampToEdgeWrapping;
         atlas.wrapT = THREE.ClampToEdgeWrapping;
@@ -58,6 +58,6 @@ export class SkyBox {
 
     public animate(): void {
         // Rotación lenta alrededor del eje Y
-        this.skyBoxMesh.rotation.y += 0.00005;
+        this.skyBoxMesh.rotation.y += 0.0005;
     }
 }

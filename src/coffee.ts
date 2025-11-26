@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { solidWithWire } from './utils/utils';
 import { scene } from './scene';
+import { getTexture } from './utils/textureManager';
 
 /**
  * Coffee - builds a small coffee cup composed of primitive geometries.
@@ -14,9 +15,8 @@ export class Coffee {
 
     constructor() {
         // Texture loader 
-        const loader = new THREE.TextureLoader();
-        const cupTexture = loader.load('src\\textures\\PowerUps\\Coffee\\Marble021_1K-JPG_Color.jpg');
-        const cupNormalTexture = loader.load('src\\textures\\PowerUps\\Coffee\\Marble021_1K-JPG_NormalDX.jpg');
+        const cupTexture = getTexture('coffee.cupTexture');
+        const cupNormalTexture = getTexture('coffee.cupNormalTexture');
 
         // Build the cup as a cylinder
         // CylinderGeometry(radiusTop, radiusBottom, height, radialSegments)

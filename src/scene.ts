@@ -29,27 +29,41 @@ export let dir: THREE.DirectionalLight;
 export function initScene(): void {
   // 1) Scene
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x87ceeb); // sky blue background
-  
-  // Load environment HDR with HDRLoader ---
-  const loader = new HDRLoader();
-  loader.load(
-      // URL del HDR
-      'src/textures/Sky/autumn_hill_view_1k.hdr',
-      // Callback onLoad
-      function (texture) {
-          // Establecer el mapeo a EquirectangularReflectionMapping
-          texture.mapping = THREE.EquirectangularReflectionMapping;
-          
-          // Asignar al entorno de la escena (para iluminación y reflejos)
-          scene.environment = texture;
-      },
-      function (error) {
-          console.error('Error al cargar el archivo HDR:', error);
-      }
-  );
+  //scene.background = new THREE.Color(0x87ceeb); // sky blue background
+  // 2) Renderer - create and attach the canvas to the document body
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-  // 2) Camera - perspective camera positioned above and behind the origin
+  // 3) Load environment HDR with HDRLoader ---
+
+  const hdrLoader = new HDRLoader();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  pmrem.compileEquirectangularShader();
+  /** 
+  hdrLoader.load(
+    'src\\textures\\Sky\\autumn_hill_view_1k.hdr',
+    (hdrTex) => {
+      hdrTex.mapping = THREE.EquirectangularReflectionMapping;
+
+      const envRT = pmrem.fromEquirectangular(hdrTex);
+      const envMap = envRT.texture;
+
+      scene.environment = envMap;
+      // si NO quieres el HDR como fondo:
+      // scene.background = null;
+      // si SÍ lo quieres también de fondo:
+      // scene.background = envMap;
+
+      hdrTex.dispose();
+      pmrem.dispose();
+    },
+    undefined,
+    (err) => {
+      console.error('Error al cargar HDR:', err);
+    }
+  );*/
+  // 4) Camera - perspective camera positioned above and behind the origin
   camera = new THREE.PerspectiveCamera(
     75,                                  // field of view in degrees
     window.innerWidth / window.innerHeight, // aspect ratio
@@ -58,12 +72,9 @@ export function initScene(): void {
   );
   camera.position.set(0, 50, 60); // place camera high and back for an overview
 
-  // 3) Renderer - create and attach the canvas to the document body
-  renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
 
-  // 4) Lights - directional light to simulate sunlight
+
+  // 5) Lights - directional light to simulate sunlight
   dir = new THREE.DirectionalLight(0xffffff, 5);
   dir.position.set(100, 40, 0);
   //dir.castShadow = true; // toggle shadows if needed
@@ -73,23 +84,23 @@ export function initScene(): void {
   const dirHelper = new THREE.DirectionalLightHelper(dir, 2, 0xff0000);
   scene.add(dirHelper);
 
-  // 5) Helpers - axes and grid help during development and debugging
+  // 6) Helpers - axes and grid help during development and debugging
   //scene.add(new THREE.AxesHelper(20));
   //scene.add(new THREE.GridHelper(20, 20));
 
-  // 6) Controls - OrbitControls creation is optional; left commented intentionally.
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
+  // 7) Controls - OrbitControls creation is optional; left commented intentionally.
+  //controls = new OrbitControls(camera, renderer.domElement);
+  //controls.enableDamping = true;
 
-  // 7) Resize handler - keeps camera aspect and renderer size correct on window resize
+  // 8) Resize handler - keeps camera aspect and renderer size correct on window resize
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  //renderer.toneMapping = THREE.ACESFilmicToneMapping;
   // Reduce la exposición para atenuar el efecto general del HDR
-  renderer.toneMappingExposure = 0.25;
-  //renderer.shadowMap.enabled = true;
+  renderer.toneMappingExposure = 0.01;
+  renderer.shadowMap.enabled = true;
 }

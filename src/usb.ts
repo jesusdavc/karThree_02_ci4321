@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { solidWithWire } from './utils/utils';
 import { scene } from './scene';
+import { getTexture } from './utils/textureManager';
 
 /**
  * USB - builds a decorative 3D sign composed of simple box primitives.
@@ -29,12 +30,11 @@ export class USB {
      */
     constructor() {
         // Texture
-        const loader = new THREE.TextureLoader();
-        const aoTexture = loader.load('src\\textures\\StacticObjects\\Usb\\others_0013_ao_1k.jpg');
-        const texture = loader.load('src\\textures\\StacticObjects\\Usb\\others_0013_color_1k.jpg');
-        const textureNormal = loader.load('src\\textures\\StacticObjects\\Usb\\others_0013_normal_directx_1k.png');
+        const aoTexture = getTexture("usb.ao");
+        const texture = getTexture("usb.texture");
+        const textureNormal = getTexture("usb.normal");
         // Base color for the letters
-        const materialColor = 0x0000ff;
+        //const materialColor = 0x0000ff;
 
         // --- Letter U construction (composed from two vertical bars and a base) ---
         const verticalBarGeo = new THREE.BoxGeometry(2, 10, 1);

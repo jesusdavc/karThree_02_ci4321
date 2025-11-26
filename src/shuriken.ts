@@ -42,7 +42,22 @@ export class Shuriken {
   constructor(name?: string) {
     this.name = name;
     const geometry = this.buildGeometry();
-    const material = new THREE.MeshStandardMaterial({ vertexColors: true });
+    /*
+    const loader = new THREE.TextureLoader();
+    const aoTexture = loader.load('src\\textures\\PowerUps\\Shuriken\\metal_0080_ao_1k.jpg');
+    aoTexture.wrapS = THREE.RepeatWrapping;
+    aoTexture.wrapT = THREE.RepeatWrapping;
+    aoTexture.repeat.set(10, 10);
+    const texture = loader.load('src\\textures\\\PowerUps\\Shuriken\\metal_0080_color_1k.jpg');
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(10,10)
+    const textureNormal = loader.load('src\\textures\\PowerUps\\Shuriken\\metal_0080_normal_directx_1k.png');
+    textureNormal.wrapS = THREE.RepeatWrapping;
+    textureNormal.wrapT = THREE.RepeatWrapping;
+    textureNormal.repeat.set(10,10)
+    */
+    const material = new THREE.MeshStandardMaterial({vertexColors: true });
     this.mesh = new THREE.Mesh(geometry, material);
     if (this.name) this.mesh.name = this.name;
     this.mesh.scale.set(0.1, 0.1, 0.1);

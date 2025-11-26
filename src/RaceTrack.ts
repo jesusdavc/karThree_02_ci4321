@@ -4,6 +4,7 @@ import { collisionObserver } from './utils/colliding';
 import { aabbIntersects } from './utils/utils';
 import type { CollisionClassName } from './models/colisionClass';
 import { Bomb } from './bomb';
+import { getTexture } from './utils/textureManager';
 
 /**
  * RaceTrack
@@ -40,19 +41,13 @@ export class RaceTrack {
    * @param color material color for the track
    */
   constructor(size: number = 1, thickness: number = 0.05, color: number = 0x222222) {
-    
-    const loader = new THREE.TextureLoader();
-    const aoTexture = loader.load('src\\textures\\StacticObjects\\RaceTrack\\asphalt_0004_ao_1k.jpg');
-    aoTexture.wrapS = THREE.RepeatWrapping;
-    aoTexture.wrapT = THREE.RepeatWrapping;
-    aoTexture.repeat.set(1, 10);
-
-    const texture = loader.load('src\\textures\\StacticObjects\\RaceTrack\\Road007_1K-JPG_Color.jpg');
+        
+    const texture = getTexture('raceTrack.texture');
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(1, 10);
 
-    const textureNormal = loader.load('src\\textures\\StacticObjects\\RaceTrack\\Road007_1K-JPG_NormalDX.jpg');
+    const textureNormal = getTexture('raceTrack.normal');
     textureNormal.wrapS = THREE.RepeatWrapping;
     textureNormal.wrapT = THREE.RepeatWrapping;
     textureNormal.repeat.set(1, 10);

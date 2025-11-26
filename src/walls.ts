@@ -4,6 +4,7 @@ import { scene } from './scene';
 import { collisionObserver } from './utils/colliding';
 import { Kart } from './kart';
 import type { CollisionClassName } from './models/colisionClass';
+import { getTexture } from './utils/textureManager';
 
 /**
  * Walls - simple rectangular wall obstacle used in the scene.
@@ -43,35 +44,40 @@ export class Walls {
         const wallColor = 0x94A596; // neutral color for walls (was Spanish comment)
         
         // Load wall textures
-        const loader = new THREE.TextureLoader();
 
-        const aoTexture = loader.load('src\\textures\\StacticObjects\\Walls\\bricks_0007_ao_1k.jpg');
+        const aoTextureBase = getTexture('wall.ao');
+        const aoTexture = aoTextureBase.clone();
+        aoTexture.needsUpdate = true;
         aoTexture.wrapS = THREE.RepeatWrapping;
         aoTexture.wrapT = THREE.RepeatWrapping;
-        aoTexture.repeat.set(this.wallLength/2, this.wallHeight/2);
+        aoTexture.repeat.set(this.wallLength / 2, this.wallHeight / 2);
 
-        const texture = loader.load('src\\textures\\StacticObjects\\Walls\\bricks_0007_color_1k.jpg');
+        // Color
+        const textureBase = getTexture('wall.texture');
+        const texture = textureBase.clone();
+        texture.needsUpdate = true;
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(this.wallLength/2, this.wallHeight/2);
+        texture.repeat.set(this.wallLength / 2, this.wallHeight / 2);
 
-        const normalTexture = loader.load('src\\textures\\StacticObjects\\Walls\\bricks_0007_normal_directx_1k.png');
+        // Normal
+        const normalBase = getTexture('wall.normal');
+        const normalTexture = normalBase.clone();
+        normalTexture.needsUpdate = true;
         normalTexture.wrapS = THREE.RepeatWrapping;
         normalTexture.wrapT = THREE.RepeatWrapping;
-        normalTexture.repeat.set(this.wallLength/2, this.wallHeight/2);
+        normalTexture.repeat.set(this.wallLength / 2, this.wallHeight / 2);
 
-        const roughnessTexture = loader.load('src\\textures\\StacticObjects\\Walls\\bricks_0007_roughness_1k.jpg');
+        // Roughness
+        const roughBase = getTexture('wall.roughness');
+        const roughnessTexture = roughBase.clone();
+        roughnessTexture.needsUpdate = true;
         roughnessTexture.wrapS = THREE.RepeatWrapping;
         roughnessTexture.wrapT = THREE.RepeatWrapping;
-        roughnessTexture.repeat.set(this.wallLength/2, this.wallHeight/2);
-
-        const metalnessTexture = loader.load('src\\textures\\StacticObjects\\Walls\\bricks_0007_metalness_1k.jpg');
-        metalnessTexture.wrapS = THREE.RepeatWrapping;
-        metalnessTexture.wrapT = THREE.RepeatWrapping;
-        metalnessTexture.repeat.set(this.wallLength/2, this.wallHeight/2);
+        roughnessTexture.repeat.set(this.wallLength / 2, this.wallHeight / 2);
 
         this.wall = solidWithWire(wallGeometry1, wallColor, false,undefined, 
-            aoTexture, texture, normalTexture, roughnessTexture, undefined, metalnessTexture, 
+            aoTexture, texture, normalTexture, roughnessTexture, undefined, undefined, 
             0.1, 0.1);
         
         // Add a small axes helper to visualize orientation during debugging

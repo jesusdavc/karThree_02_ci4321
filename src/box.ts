@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { getTexture } from './utils/textureManager';
 /**
  * Box - builds a decorative box composed of planes and small bars.
  * The Box class encapsulates a THREE.Group that contains multiple Mesh children.
@@ -25,10 +26,9 @@ export class Box {
 
       // Texture faces
 
-      const loader = new THREE.TextureLoader();
-      const aoTexture = loader.load('src\\textures\\StacticObjects\\PowerBox\\wood_0004_ao_1k.jpg');
-      const texture = loader.load('src\\textures\\StacticObjects\\PowerBox\\wood_0004_color_1k.jpg');
-      const textureNormal = loader.load('src\\textures\\StacticObjects\\PowerBox\\wood_0004_normal_directx_1k.png');
+      const aoTexture = getTexture('box.faceAo');
+      const texture = getTexture('box.faceTexture');
+      const textureNormal = getTexture('box.faceNormal');
       
       // Create top face (plane) - red
       let gemetriP1 = new THREE.PlaneGeometry(1, 1);
@@ -81,9 +81,9 @@ export class Box {
       
       // Color for the wooden-like bars
       let colorBar = 0x63472d;
-      const aoTextureBar = loader.load('src\\textures\\StacticObjects\\PowerBox\\wood_0006_ao_1k.jpg');
-      const textureBar = loader.load('src\\textures\\StacticObjects\\PowerBox\\wood_0006_color_1k.jpg');
-      const textureNormalBar = loader.load('src\\textures\\StacticObjects\\PowerBox\\wood_0006_normal_directx_1k.png');
+      const aoTextureBar = getTexture('box.barAo');
+      const textureBar = getTexture('box.barTexture');
+      const textureNormalBar = getTexture('box.barNormal');
       
       // Four vertical corner bars (small box geometries) - positions marked for corners
       let gemetriC1 = new THREE.BoxGeometry(0.2, 1.2, 0.2);

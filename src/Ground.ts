@@ -4,6 +4,7 @@ import { collisionObserver } from './utils/colliding';
 import { aabbIntersects } from './utils/utils';
 import type { CollisionClassName } from './models/colisionClass';
 import { Bomb } from './bomb';
+import { getTexture } from './utils/textureManager';
 
 /**
  * Ground
@@ -29,18 +30,17 @@ export class Ground {
   constructor(width: number = 100, length: number = 100, color: number = 0x6aa84f) {
     const geometry = new THREE.PlaneGeometry(width, length);
 
-    const loader = new THREE.TextureLoader()
-    const aoTexture = loader.load('src\\textures\\StacticObjects\\Ground\\aerial_rocks_01_ao_1k.jpg');
+    const aoTexture = getTexture('ground.ao');
     aoTexture.wrapS = THREE.RepeatWrapping;
     aoTexture.wrapT = THREE.RepeatWrapping;
     aoTexture.repeat.set(width/4, length/4);
 
-    const texture = loader.load('src\\textures\\StacticObjects\\Ground\\aerial_rocks_01_diff_1k.jpg');
+    const texture = getTexture('ground.texture');
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(width/4, length/4);
 
-    const textureNormal = loader.load('src\\textures\\StacticObjects\\Ground\\aerial_rocks_01_nor_gl_1k.jpg');
+    const textureNormal = getTexture('ground.normal');
     textureNormal.wrapS = THREE.RepeatWrapping;
     textureNormal.wrapT = THREE.RepeatWrapping;
     textureNormal.repeat.set(width/4, length/4);

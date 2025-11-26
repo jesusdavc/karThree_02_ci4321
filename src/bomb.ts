@@ -5,6 +5,7 @@ import { aabbIntersects } from './utils/utils';
 import type { CollisionClassName } from './models/colisionClass';
 import { TrafficCone } from './trafficCone';
 import { Walls } from './walls';
+import { getTexture } from './utils/textureManager';
 
 /**
  * Bomb - simple throwable explosive with fuse, gravity, timer and explosion behavior.
@@ -40,9 +41,9 @@ export class Bomb {
 
     // Textures
     
-    const aoTexture = this.loader.load('src\\textures\\PowerUps\\Bomb\\metal_0074_ao_1k.jpg');
-    const texture = this.loader.load('src\\textures\\PowerUps\\Bomb\\metal_0074_color_1k.jpg');
-    const textureNormal = this.loader.load('src\\textures\\PowerUps\\Bomb\\metal_0074_normal_directx_1k.png');
+    const aoTexture = getTexture('bomb.ao');
+    const texture = getTexture('bomb.texture');
+    const textureNormal = getTexture('bomb.normal');
 
     // Main bomb body (sphere)
     const geometry = new THREE.SphereGeometry(0.5, 16, 16);
@@ -55,6 +56,7 @@ export class Bomb {
     const fuseGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.25, 8);
     const fuseMaterial = new THREE.MeshStandardMaterial({ color: 0xffaa00, emissive: 0xff6600, emissiveIntensity: 1 });
     this.fuse = new THREE.Mesh(fuseGeometry, fuseMaterial);
+    
     // Place the fuse slightly above the bomb surface
     this.fuse.position.set(0, 0.6, 0);
     this.mesh.add(this.fuse);
@@ -207,8 +209,9 @@ export class Bomb {
     this.mesh.remove(this.fuse); // remove fuse visual
     // Visual feedback: change color and expand
     const mat = this.mesh.material as THREE.MeshStandardMaterial;
-    const texture = this.loader.load('src\\textures\\PowerUps\\Bomb\\Lava004_1K-JPG_Color.jpg');
-    const textureNormal = this.loader.load('src\\textures\\PowerUps\\Bomb\\Lava004_1K-JPG_NormalDX.jpg');
+    const texture = getTexture('bomb.lava.texture');
+    const textureNormal = getTexture('bomb.lava.normal');
+    
     //mat.color.set(0xff4400);
     mat.map = texture;
     mat.normalMap = textureNormal;

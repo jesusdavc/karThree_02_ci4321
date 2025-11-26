@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import { PowerUp } from "../powerUps";
 import { Kart } from "../kart";
 import { TrafficCone } from "../trafficCone";
