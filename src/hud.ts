@@ -167,17 +167,18 @@ export async function initHUD() {
 
   // Puntuación (6 dígitos, esquina superior derecha)
   const scoreGroup = new THREE.Group();
-  const maxScoreDigits = 3;
-  const digitSize = 18;
-  const spacing = digitSize + 4;
-  
-  for (let i = 0; i < maxScoreDigits; i++) {
-    const dm = makeDigitMesh(4, digitSize);
-    const x = W - 12 - (maxScoreDigits * spacing) / 2 + i * spacing + spacing / 2;
-    dm.position.set(x, H - 12 - digitSize / 2, 0);
-    scoreGroup.add(dm);
-  }
-  
+const maxScoreDigits = 6;
+const digitSize = 18;
+const spacing = digitSize;
+const rightMargin = 96; // Aumentado de 12 a 24
+const bottomMargin = 24; // Aumentado de 12 a 24
+
+for (let i = 0; i < maxScoreDigits; i++) {
+  const dm = makeDigitMesh(4, digitSize);
+  const x = W - rightMargin - (maxScoreDigits * spacing) / 2 + i * spacing + spacing / 2;
+  dm.position.set(x, H - bottomMargin - digitSize / 2, 0);
+  scoreGroup.add(dm);
+}
   scoreMesh = scoreGroup as any as THREE.Mesh;
   hudScene.add(scoreGroup);
   scoreDigitMeshes = scoreGroup.children as unknown as THREE.Mesh[];

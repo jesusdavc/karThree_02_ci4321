@@ -6,7 +6,7 @@ import type {Proyectils, StaticObjects } from './models/colisionClass';
 import { collisionObserver } from './utils/colliding';
 import { Coffee } from './coffee';
 import { Bomb } from './bomb';
-import { setPowerUpType, setPowerUpCount } from './hud';
+import { setPowerUpType, setPowerUpCount, showFloatingPoints, addPoints } from './hud';
 
 
 /**
@@ -306,6 +306,18 @@ export class Kart {
 
       this.powerUpsList.position.copy(this.kart.position);
       console.log(this.powerUpsList.position);
+    const powerUpPoints: { [key: number]: number } = {
+      0: 100,  // 1 shuriken
+      1: 200,  // 2 shurikens
+      2: 300,  // 3 shurikens
+      3: 150,  // bomba
+      4: 100,  // 1 café
+      5: 200,  // 2 cafés
+      6: 300   // 3 cafés
+    };
+    
+    const pointsEarned = powerUpPoints[count] || 100;
+
       switch (this.powerUps) {
         case 0:
           setPowerUpType("shuriken");
@@ -405,6 +417,8 @@ export class Kart {
           this.powerUpsList.add(coffee1_case6.getBody(), coffee2_case6.getBody(), coffee3_case6.getBody());
           break;
       }
+      showFloatingPoints(this.kart.position, pointsEarned);
+      addPoints(pointsEarned);
       scene.add(this.powerUpsList);
 
     } else {
