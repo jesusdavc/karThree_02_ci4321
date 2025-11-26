@@ -76,13 +76,14 @@ export function initScene(): void {
 
   // 5) Lights - directional light to simulate sunlight
   dir = new THREE.DirectionalLight(0xffffff, 5);
-  dir.position.set(100, 40, 0);
+  dir.position.set(100, 30, 0);
   //dir.castShadow = true; // toggle shadows if needed
+  dir.intensity = 4;
   scene.add(dir);
 
   // Optional helper to visualize the directional light (disabled by default)
   const dirHelper = new THREE.DirectionalLightHelper(dir, 2, 0xff0000);
-  scene.add(dirHelper);
+  //scene.add(dirHelper);
 
   // 6) Helpers - axes and grid help during development and debugging
   //scene.add(new THREE.AxesHelper(20));
