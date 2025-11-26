@@ -30,6 +30,8 @@
   "kar.wheelTexture": "src/textures/Kar/plastic_0022_ao_1k.jpg",
   "kar.wheelNormal": "src/textures/Kar/plastic_0022_normal_1k.jpg",
   
+  "hud": "src/textures/Hud/hud_atlas.png",
+  
   "raceTrack.texture": "src/textures/StacticObjects/RaceTrack/Road007_1K-JPG_Color.jpg",
   "raceTrack.normal": "src/textures/StacticObjects/RaceTrack/Road007_1K-JPG_NormalDX.jpg",
   

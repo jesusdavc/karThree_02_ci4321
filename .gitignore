@@ -28,10 +28,10 @@ firstVersion
 *.jpg
 *.png
 *.txt
-update.ts
 
 
 !src/textures/
+!src/textures/Hud/hud_atlas.png
 !src/textures/PowerUps/Bomb/metal_0074_color_1k.jpg
 !src/textures/PowerUps/Bomb/metal_0074_ao_1k.jpg
 !src/textures/PowerUps/Bomb/metal_0074_normal_directx_1k.png

@@ -5,6 +5,7 @@ import {createConeSquare, createFourWalls, createHeartCones,
 import { setupControls} from './src/controls.ts';
 import { animate } from './src/utils/animation.ts';
 import { preloadTexturesFromConfig} from './src/utils/textureManager.ts';   
+import { initHUD } from './src/hud.ts';
 
 async function main() {
     await preloadTexturesFromConfig();
@@ -13,6 +14,7 @@ async function main() {
     createGround();
     createHollowSquare(120, 28);
     setupControls();
+    initHUD();
     createFourWalls(150,10);
     createFourWalls(20, 10, false);
     createKart();   
