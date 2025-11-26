@@ -466,15 +466,17 @@ export class Kart {
           this.activateSpeedBoost(performance.now(), 3000);
           break;
       }
-
+      // Update HUD with current power-up type and count
       console.log(this.powerUpsList.children.length);
     } 
-
+    setPowerUpCount(this.powerUpsList.children.length);
     // If visual list empty, reset power-up state
     if (this.powerUpsList.children.length === 0 && this.isActivatePowerUps) {
       this.isActivatePowerUps = false;
       this.powerUps = -1;
       console.log("No tienes power ups ");
+      setPowerUpCount(0);
+      setPowerUpType("none");
     }
   }
 

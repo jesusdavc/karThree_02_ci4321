@@ -344,7 +344,7 @@ export function setPowerUpCount(n: number) {
 
 // Actualizar velocidad (tacómetro digital)
 export function updateVelocity(v: number, maxSpeed = 1) {
-  const speedDisplay = Math.round(Math.abs(v) * 100);
+  const speedDisplay = Math.round(Math.abs(v) * 1000);
   if (tachDigitMeshes && tachDigitMeshes.length) {
     setDigitMeshesValue(tachDigitMeshes, speedDisplay);
   }
