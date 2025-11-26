@@ -246,7 +246,7 @@ export function showFloatingPoints(worldPos: THREE.Vector3, value: number, durat
   const W = window.innerWidth;
   const H = window.innerHeight;
   const sx = (v.x + 1) * 0.5 * W;
-  const sy = (1 - (v.y + 1) * 0.5) * H;
+  const sy = (1 - (v.y + 1) * 0.25) * H;
 
   const text = Math.max(0, Math.floor(value)).toString();
   const group = new THREE.Group();
