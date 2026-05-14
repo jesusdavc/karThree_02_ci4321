@@ -27,7 +27,7 @@ export class Ground {
    * @param length plane length (Z axis)
    * @param color material color for the track
    */
-  constructor(width: number = 100, length: number = 100, color: number = 0x6aa84f) {
+  constructor(width: number = 100, length: number = 100, _color: number = 0x6aa84f) {
     const geometry = new THREE.PlaneGeometry(width, length);
 
     const aoTexture = getTexture('ground.ao');

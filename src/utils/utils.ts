@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import type { CollisionClassName, ReflectObjects, StaticObjects } from "../models/colisionClass";
 import { Shuriken } from "../shuriken";
-import type { roughness } from "three/tsl";
 
 /**
  * Utility functions used across the project.
@@ -87,16 +86,6 @@ function getLocalBox(mesh: THREE.Mesh): THREE.Box3 {
     localBoxCache.set(geo, box);
   }
   return box;
-}
-
-/**
- * invalidateLocalBox - call this when you modify the vertex positions of a geometry
- * (attributes.position). It forces recomputation and updates the cached box.
- */
-function invalidateLocalBox(mesh: THREE.Mesh) {
-  const geo = mesh.geometry as THREE.BufferGeometry;
-  geo.computeBoundingBox();
-  localBoxCache.set(geo, geo.boundingBox!.clone());
 }
 
 /**

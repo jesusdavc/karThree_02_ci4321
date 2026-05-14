@@ -1,5 +1,5 @@
 import { updateCameraRig, updateControls } from '../controls';
-import { scene, camera, renderer, dir, controls} from '../scene';
+import { scene, camera, renderer, dir} from '../scene';
 import { collisionObserver } from './colliding';    
 import { kart, listPowerUps, decorators } from './initializers';
 import { updateHUD, renderHUD } from '../hud';

@@ -20,7 +20,6 @@ export class Bomb {
   private mesh: THREE.Mesh;
   private fuse: THREE.Mesh;
   private name?: string;
-  private loader = new THREE.TextureLoader();
   // explosion animation state
   private explosionElapsed: number = 0;
   private explosionDuration: number = 5.0; // seconds to grow
@@ -138,7 +137,7 @@ export class Bomb {
    * - Changes fuse color/emissive intensity as the timer counts down.
    * - Optionally shortens the fuse scale for a burning effect.
    */
-  private updateFuse(deltaTime: number): void {
+  private updateFuse(_deltaTime: number): void {
     const fuseMat = this.fuse.material as THREE.MeshStandardMaterial;
     // Normalize timer to [0..1] where 1 is full time remaining and 0 is expired
     const t = Math.max(0, this.timer / 3);

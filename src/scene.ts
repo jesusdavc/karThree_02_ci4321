@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 /**
  * Global scene objects exported for use across the app.
  * - scene: main THREE.Scene instance
@@ -37,7 +36,6 @@ export function initScene(): void {
 
   // 3) Load environment HDR with HDRLoader ---
 
-  const hdrLoader = new HDRLoader();
   const pmrem = new THREE.PMREMGenerator(renderer);
   pmrem.compileEquirectangularShader();
   /** 
@@ -82,7 +80,6 @@ export function initScene(): void {
   scene.add(dir);
 
   // Optional helper to visualize the directional light (disabled by default)
-  const dirHelper = new THREE.DirectionalLightHelper(dir, 2, 0xff0000);
   //scene.add(dirHelper);
 
   // 6) Helpers - axes and grid help during development and debugging
