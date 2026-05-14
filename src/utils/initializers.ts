@@ -4,6 +4,8 @@ import { TrafficCone } from "../trafficCone";
 import { Walls } from "../walls";
 import { USB } from "../usb";
 import { SkyBox } from "../skyBox";
+import { Ground } from "../Ground";
+import { RaceTrack } from "../RaceTrack";
 
 /*
  * Initialization module - factory helpers to create scene entities.
@@ -241,13 +243,13 @@ export function createConeSquare(
 }
 
 /** createGround - convenience helper to create a Ground with default size. */
-export function createGround(){
-  // const ground = new Ground(150,150);
+export function createGround(): void {
+  new Ground(150, 150);
 }
 
 // Función para generar 4 planos unidos formando un cuadrado "sin relleno"
-export function createHollowSquare(_size?: number,_thickness?: number){
-  // const group = new RaceTrack(size, thickness);
+export function createHollowSquare(size: number = 100, thickness: number = 0.5): void {
+  new RaceTrack(size, thickness);
 }
 
 export function createSkyBox(): void {

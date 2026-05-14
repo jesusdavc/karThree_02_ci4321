@@ -24,20 +24,21 @@ const pathToTexturePromise = new Map<string, Promise<THREE.Texture>>();
  * Carga una textura por path, con cache por path.
  */
 function loadTextureByPath(path: string): Promise<THREE.Texture> {
+  const resolvedPath = `${import.meta.env.BASE_URL}${path}`;
 
-  const existing = pathToTexturePromise.get(path);
+  const existing = pathToTexturePromise.get(resolvedPath);
   if (existing) return existing;
 
   const promise = new Promise<THREE.Texture>((resolve, reject) => {
     loader.load(
-      path,
+      resolvedPath,
       (tex) => {
         tex.needsUpdate = true;
         resolve(tex);
       },
       undefined,
       (event) => {
-        console.error(`❌ Error cargando textura: ${path}`, event);
+        console.error(`❌ Error cargando textura: ${resolvedPath}`, event);
         reject(event);
       }
     );
